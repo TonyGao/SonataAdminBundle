@@ -205,7 +205,7 @@ SonataAdmin 需要翻译器服务来显示所有可能的标签。
 .. image:: ../images/getting_started_empty_dashboard.png
 
 如你所见，管理后台控制面板是空的。这是因为还没 bundle 给后台提供管理功能。幸运的是，
-你在下一章 :doc:`next chapter <creating_an_admin>`就会学习怎么用了。
+你在下一章 :doc:`next chapter <creating_an_admin>` 就会学习怎么用了。
 
 .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
 .. _SonataDoctrineORMAdminBundle: http://sonata-project.org/bundles/doctrine-orm-admin/master/doc/index.html
