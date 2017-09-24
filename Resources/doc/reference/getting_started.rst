@@ -1,31 +1,25 @@
-Getting started with SonataAdminBundle
+2. 开始使用 SonataAdminBundle
 ======================================
 
-If you followed the installation instructions, SonataAdminBundle should be installed
-but inaccessible. You first need to configure it for your models before you can
-start using it. Here is a quick checklist of what is needed to quickly setup
-SonataAdminBundle and create your first admin interface for the models of your application:
+如果你遵循了安装过程，SonataAdminBundle 应该已经安装好了，但还不可用。在使用之前你得配置你的模型。这里
+有一个让你 SonataAdminBundle 快速工作并为你程序的模型创建后台管理界面的勾选清单：
 
-* Step 1: Create an Admin class
-* Step 2: Create an Admin service
-* Step 3: Configuration
+* 步骤 1：创建一个 Admin 类
+* 步骤 2： 创建一个 Admin 服务
+* 步骤 3： 配置
 
-Create an Admin class
+2.1 创建一个 Admin 类
 ---------------------
 
-SonataAdminBundle helps you manage your data using a graphic interface that
-will let you create, update or search your model's instances. Those actions need to
-be configured, which is done using an Admin class.
+SonataAdminBundle 通过图形界面帮助你管理你的数据，可以让你创建，更新或搜索你的模型的实例。这些操作
+需要通过配置 Admin 类来配置。
 
-An Admin class represents the mapping of your model to each administration action.
-In it, you decide which fields to show on a listing, which to use as filters or what
-to show in a creation or edition form.
+Admin 类会呈现你模型对每个管理操作的映射。其中，你可以决定哪些字段会显示到清单里，哪些用于过滤，或者
+哪些在创建或编辑表单里显示出来。
 
-The easiest way to create an Admin class for your model is to extend
-the ``Sonata\AdminBundle\Admin\AbstractAdmin`` class.
+创建一个 Admin 类最简单的方法是扩展 ``Sonata\AdminBundle\Admin\AbstractAdmin`` 类。
 
-Suppose your ``AppBundle`` has a ``Post`` entity.
-This is how a basic Admin class for it could look like:
+假设你的 ``AppBundle`` 有一个 ``Post`` 数据实体。这里有一个基本的 Admin 类的例子：
 
 .. code-block:: php
 
@@ -42,7 +36,7 @@ This is how a basic Admin class for it could look like:
 
     class PostAdmin extends AbstractAdmin
     {
-        // Fields to be shown on create/edit forms
+        // 在创建/编辑表单中显示的字段
         protected function configureFormFields(FormMapper $formMapper)
         {
             $formMapper
@@ -53,14 +47,14 @@ This is how a basic Admin class for it could look like:
                     'class' => 'AppBundle\Entity\User'
                 ))
 
-                // if no type is specified, SonataAdminBundle tries to guess it
+                // 如果没有类型被设定，SonataAdminBundle 会尝试猜测它
                 ->add('body')
 
                 // ...
            ;
         }
 
-        // Fields to be shown on filter forms
+        // 显示在过滤器表单中的字段
         protected function configureDatagridFilters(DatagridMapper $datagridMapper)
         {
            $datagridMapper
@@ -69,7 +63,7 @@ This is how a basic Admin class for it could look like:
            ;
         }
 
-        // Fields to be shown on lists
+        // 在清单中显示的字段
         protected function configureListFields(ListMapper $listMapper)
         {
             $listMapper
@@ -79,7 +73,7 @@ This is how a basic Admin class for it could look like:
            ;
         }
 
-        // Fields to be shown on show action
+        // 在显示操作中显示的字段
         protected function configureShowFields(ShowMapper $showMapper)
         {
             $showMapper
