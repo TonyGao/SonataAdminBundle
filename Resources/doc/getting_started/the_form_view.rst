@@ -1,16 +1,14 @@
-The Form View
+3. 表单视图
 =============
 
-You've seen the absolute top of the iceberg in
-:doc:`the previous chapter <creating_an_admin>`. But there is a lot more to
-discover! In the coming chapters, you'll create an Admin class for the more
-complex ``BlogPost`` model. Meanwhile, you'll learn how to make things a bit
-more pretty.
+在 :doc:`the previous chapter <creating_an_admin>` 你已经看到冰山一角了。 
+但还有好多需要讨论的东西！在接下来的章节，你会为更加复杂的 ``BlogPost`` 模型
+创建一个 Admin 类。 就是说，你将学习怎么让这个事更漂亮的完成。
 
-Bootstrapping the Admin Class
+3.1 启动 Admin 类
 -----------------------------
 
-The basic class definition will look the same as the ``CategoryAdmin``:
+基本的类定义和 ``CategoryAdmin`` 类似：
 
 .. code-block:: php
 
@@ -34,7 +32,7 @@ The basic class definition will look the same as the ``CategoryAdmin``:
         }
     }
 
-The same applies to the service definition:
+服务定义也是一样的：
 
 .. code-block:: yaml
 
@@ -49,25 +47,20 @@ The same applies to the service definition:
                 - { name: sonata.admin, manager_type: orm, label: Blog post }
             public: true
 
-Configuring the Form Mapper
+3.2 配置表单映射器
 ---------------------------
 
-If you already know the `Symfony Form component`_, the ``FormMapper`` will look
-very similar.
+如果你已经了解过了 `Symfony 表单组件`_, ``FormMapper`` 跟它非常类似。
 
-You use the ``add()`` method to add fields to the form. The first argument is
-the name of the property the field value maps to, the second argument is the
-type of the field (see the `field type reference`_) and the third argument are
-additional options to customize the form type. Only the first argument is
-required as the Form component has type guessers to guess the type.
+你可以使用 ``add()`` 方法添加字段到表单里。第一参数是这个字段值要映射到的属性的名称，
+第二个参数是字段的类型( 查阅 `字段类型参考手册`_ ) 第三个参数是用来自定义表单类型的
+额外选项。表单组件只强制要求第一个参数，因为它可有类型猜测器来猜测它的类型。
 
-The ``BlogPost`` model has 4 properties: ``id``, ``title``, ``body``,
-``category``. The ``id`` property's value is generated automatically by the
-database. This means the form view just needs 3 fields: title, body and
-category.
+``BlogPost`` 模型有 4 个属性： ``id``, ``title``, ``body``,
+``category`` 。`id` 是由数据库自动生成的。这就是说表单视图只需要3个字段：
+title, body 和 category 。
 
-The title and body fields are simple "text" and "textarea" fields, you can add
-them straight away:
+title 和 body 字段只是简单的 “text” 和 “textarea” 类型， 你可以把它们直接添加上：
 
 .. code-block:: php
 
@@ -82,15 +75,13 @@ them straight away:
         ;
     }
 
-However, the category field will reference another model. How can you solve that?
+然而，category 字段会涉及到另一个模型。你怎么解决它呢？
 
-Adding Fields that Reference Other Models
+3.3 添加涉及其他模型的字段
 -----------------------------------------
 
-You have a couple different choices on how to add fields that reference other
-models. The most basic choice is to use the `entity field type`_ provided by
-the DoctrineBundle. This will render a choice field with the available entities
-as choice.
+对于添加涉及其他模型的字段你有很多不同的选择。最基础的选择是使用 DoctrineBundle 提供的
+ `数据实体字段类型`_ 。这会将可得的数据作为选项来渲染一个下拉选框。
 
 .. code-block:: php
 
@@ -109,22 +100,20 @@ as choice.
     }
 .. note::
 
-    The `property`_ option is not supported by Symfony >= 2.7. You should use `choice_label`_ instead.
+    `property`_ 选项在 Symfony 2.7 以上的版本不被支持。你应该使用 `choice_label`_ 来代替。
 
-As each blog post will only have one category, it renders as a select list:
+因为每个 blog 都会有一个类型，所以它渲染为一个选择下拉框：
 
 .. image:: ../images/getting_started_entity_type.png
 
-When an admin would like to create a new category, they need to go to the
-category admin page and create a new category.
+当一个管理员要创建一个新的类型时，他需要进入类型的管理页面，然后创建一个新的类型。
 
-Using the Sonata Model Type
+3.3.1 使用 Sonata 模型类型
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To make life easier for admins, you can use the
-:ref:`sonata_type_model field type <field-types-model>`. This field type will
-also render as a choice field, but it includes a create button to open a
-dialog with the admin of the referenced model in it:
+要让事情变得容易些，你可以使用:ref:`sonata_type_model field type <field-types-model>`
+(字段类型)。这个字段类型仍然会作为一个下拉选框渲染出来，但它会包含一个创建按钮来打开一个对话框来
+管理相关的模型：
 
 .. code-block:: php
 
@@ -144,15 +133,14 @@ dialog with the admin of the referenced model in it:
 
 .. image:: ../images/getting_started_sonata_model_type.png
 
-Using Groups
+3.4 使用分组
 ------------
 
-Currently, everything is put into one block. Since the form only has three
-fields, it is still usable, but it can become quite a mess pretty quick. To
-solve this, the form mapper also supports grouping fields together.
+当前，所有的东西都放到一个 block 里。表单仅支持树状字段，现在它还可用，但很快它会变成难以维护。
+要解决这个问题，表单映射器支持将字段进行分组。
 
-For instance, the title and body fields can belong to the Content group and the
-category field to a Meta data group. To do this, use the ``with()`` method:
+例如，title 和  body 字段可以属于 Content 分组，而 category 字段属于 Meta 数据分组。
+用 ``with()`` 方法来实现：
 
 .. code-block:: php
 
@@ -176,9 +164,8 @@ category field to a Meta data group. To do this, use the ``with()`` method:
         ;
     }
 
-The first argument is the name/label of the group and the second argument is an
-array of options. For instance, you can pass HTML classes to the group in
-order to tweak the styling:
+第一个参数是这个分组的名称或标签名，第二个参数是一个选项的数组。例如，你可以传一个 HTML class 
+到分组里来修改它们的样式：
 
 .. code-block:: php
 
@@ -197,15 +184,14 @@ order to tweak the styling:
         ;
     }
 
-This will now result in a much nicer edit page:
+这会让编辑页面变得更漂亮：
 
 .. image:: ../images/getting_started_post_edit_grid.png
 
-Using Tabs
+3.4.1 使用标签
 ~~~~~~~~~~
 
-If you get even more options, you can also use multiple tabs by using the
-``tab()`` shortcut method:
+如果你想用更多的选项，你可以用 ``tab()`` 方法来划分多个标签：
 
 .. code-block:: php
 
@@ -222,25 +208,22 @@ If you get even more options, you can also use multiple tabs by using the
         ->end()
     ;
 
-Creating a Blog Post
+3.5 创建一篇博文
 --------------------
 
-You've now finished your nice form view for the ``BlogPost`` model. Now it's
-time to test it out by creating a post.
+现在你要为这个 ``BlogPost`` 模型的漂亮表单视图做个结束动作了。现在是时候创建一个博客来
+测试一下了。
 
-After pressing the "Create" button, you probably see a green message like:
-*Item "AppBundle\Entity\BlogPost:00000000192ba93c000000001b786396" has been
-successfully created.*
+在按了 "Create" 按钮之后，你可能会看到一个绿色的消息，类似：
+*子项 "AppBundle\Entity\BlogPost:00000000192ba93c000000001b786396" 已经创建成功。*
 
-While it's very friendly of the SonataAdminBundle to notify the admin of a
-successful creation, the classname and some sort of hash aren't really nice to
-read. This is the default string representation of an object in the
-SonataAdminBundle. You can change it by defining a ``toString()`` method in the
-Admin class. This receives the object to transform to a string as the first parameter:
+虽然 SonataAdminBundle 给管理员做了非常友好的创建提示，但是类名和哈希却并不好读。这是 
+SonataAdminBundle 里的对象的默认字符串表达。你可以通过在 Admin 类里定义一个 ``toString()`` 
+方法来修改它。这个会接要转换为字符串的对象作为第一个参数：
 
 .. note::
 
-    No underscore prefix! ``toString()`` is correct!
+    没有下划线前缀！ ``toString()`` 是正确的！
 
 .. code-block:: php
 
@@ -261,19 +244,16 @@ Admin class. This receives the object to transform to a string as the first para
         }
     }
 
-Round Up
+3.6 总结
 --------
 
-In this tutorial, you've made your first contact with the greatest feature of
-the SonataAdminBundle: Being able to customize literally everything. You've
-started by creating a simple form and ended up with a nice edit page for your
-admin.
+在这个教程里，你已经第一次领略了 SonataAdminBundle 的最棒的特性：可以逐一自定义一切事物。
+从创建一个简单的表单开始，一直到实现一个漂亮的管理编辑页面结束。
 
-In the :doc:`next chapter <the_list_view>`, you're going to look at the list
-and datagrid actions.
+在下一章， :doc:`next chapter <the_list_view>`, 你会对清单和数据列表操作一探究竟。
 
-.. _`Symfony Form component`: http://symfony.com/doc/current/book/forms.html
-.. _`field type reference`: http://symfony.com/doc/current/reference/forms/types.html
-.. _`entity field type`: http://symfony.com/doc/current/reference/forms/types/entity.html
+.. _`Symfony 表单组件`: http://symfony.com/doc/current/book/forms.html
+.. _`字段类型参考手册`: http://symfony.com/doc/current/reference/forms/types.html
+.. _`数据实体字段类型`: http://symfony.com/doc/current/reference/forms/types/entity.html
 .. _`choice_label`: http://symfony.com/doc/current/reference/forms/types/entity.html#choice-label
 .. _`property`: http://symfony.com/doc/2.6/reference/forms/types/entity.html#property
