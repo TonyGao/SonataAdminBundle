@@ -1,23 +1,22 @@
-Creating an Admin
+创建一个后台管理
 =================
 
-You've been able to get the admin interface working in :doc:`the previous
-chapter <installation>`. In this tutorial, you'll learn how to tell SonataAdmin
-how an admin can manage your models.
+你现在可以通过前一章 :doc:`the previous
+chapter <installation>` 提到的管理后台界面工作起来了， 你得学习告知 
+SonataAdmin 怎么管理你的模型。
 
-Step 0: Create a Model
+步骤 0：创建一个模型
 ----------------------
 
-For the rest of the tutorial, you'll need some sort of model. In this tutorial,
-two very simple ``Post`` and ``Tag`` entities will be used. Generate them by
-using these commands:
+因为教程其余部分的需要，你需要一些模型。在本教程，将用到两个非常简单的
+ ``Post`` 和 ``Tag`` 数据实体。通过这些命令来生成它们：
 
 .. code-block:: bash
 
     $ php bin/console doctrine:generate:entity --entity="AppBundle:Category" --fields="name:string(255)" --no-interaction
     $ php bin/console doctrine:generate:entity --entity="AppBundle:BlogPost" --fields="title:string(255) body:text draft:boolean" --no-interaction
 
-After this, you'll need to tweak the entities a bit:
+此后，你将需要稍微修改一下这些数据实体：
 
 .. code-block:: php
 
@@ -46,7 +45,7 @@ After this, you'll need to tweak the entities a bit:
         // ...
     }
 
-Set the default value to ``false``.
+设置默认值为 ``false``.
 
 .. code-block:: php
 
@@ -98,7 +97,7 @@ Set the default value to ``false``.
         // ...
     }
 
-After this, create the schema for these entities:
+此后，创建这些数据实体的数据表结构：
 
 .. code-block:: bash
 
@@ -106,23 +105,19 @@ After this, create the schema for these entities:
 
 .. note::
 
-    This article assumes you have basic knowledge of the Doctrine2 ORM and
-    you've set up a database correctly.
+    这篇文章假设你有基本的 Doctrine 2 ORM 知识，并且你已经正确安装了一个数据库。
 
-Step 1: Create an Admin Class
+步骤 1：创建一个管理后台类
 -----------------------------
 
-SonataAdminBundle helps you manage your data using a graphical interface that
-will let you create, update or search your model instances. The bundle relies
-on Admin classes to know which models will be managed and how these actions
-will look like.
+SonataAdminBundle 将帮助你通过图形界面来管理你的数据，你可以创建、更新或搜索你的模型实例。
+这个 bundle 依赖于管理后台类，来让它知道将管理哪个模型，以及这些操作将是什么样子。
 
-An Admin class decides which fields to show on a listing, which fields are used
-to find entries and how the create form will look like. Each model will have
-its own Admin class.
+这个 Admin 类决定了哪些字段将被显示到列表里，哪些字段将被用来做筛选，以及创建的表单看起来是
+什么样子。每个模型都有它自己的 Admin 类。
 
-Knowing this, let's create an Admin class for the ``Category`` entity. The
-easiest way to do this is by extending ``Sonata\AdminBundle\Admin\AbstractAdmin``.
+知道了这些，我们来创建一个 ``Category`` 数据实体的 ``Admin`` 类吧。 最简单的方法是扩展自
+ ``Sonata\AdminBundle\Admin\AbstractAdmin``.
 
 .. code-block:: php
 
@@ -152,27 +147,22 @@ easiest way to do this is by extending ``Sonata\AdminBundle\Admin\AbstractAdmin`
         }
     }
 
-So, what does this code do?
+那么，这些代码做了什么呢？
 
-* **Line 11-14**: These lines configure which fields are displayed on the edit
-  and create actions. The ``FormMapper`` behaves similar to the ``FormBuilder``
-  of the Symfony Form component;
-* **Line 16-19**: This method configures the filters, used to filter and sort
-  the list of models;
-* **Line 21-24**: Here you specify which fields are shown when all models are
-  listed (the ``addIdentifier()`` method means that this field will link to the
-  show/edit page of this particular model).
+* **11-14 行**: 这些行配置了哪些字段将在编辑和创建操作时显示。 ``FormMapper`` 
+的表现类似于 Symfony 表单组件的 ``FormBuilder``;
+* **16-19 行**: 这个方法配置了过滤器，用来过滤和排序模型的列表;
+* **Line 21-24**: 这里设定了哪些字段用来在所有模型都列出来后用于显示它们(
+ ``addIdentifier()`` 方法意味着这个字段将链接到这个特定模型的查看/编辑页面 )。
 
-This is the most basic example of the Admin class. You can configure a lot more
-with the Admin class. This will be covered by other, more advanced, articles.
+这是 Admin 类最基本的例子。你可以用 Admin 类做更多的配置。这些将在其他更高级的文章里涵盖。
 
-Step 3: Register the Admin class
+步骤3：登记 Admin 类
 --------------------------------
 
-You've now created an Admin class, but there is currently no way for the
-SonataAdminBundle to know that this Admin class exists. To tell the
-SonataAdminBundle of the existence of this Admin class, you have to create a
-service and tag it with the ``sonata.admin`` tag:
+你现在已经创建了一个 Admin 类，但现在还没方法让 SonataAdminBundle 知道这个 Admin 
+类的存在。要想告诉 SonataAdminBundle 这个 Admin 类的存在，你得创建一个服务，
+并给它打上 ``sonata.admin`` 的标签:
 
 .. code-block:: yaml
 
@@ -187,16 +177,14 @@ service and tag it with the ``sonata.admin`` tag:
                 - { name: sonata.admin, manager_type: orm, label: Category }
             public: true
 
-The constructor of the base Admin class has many arguments. SonataAdminBundle
-provides a compiler pass which takes care of configuring it correctly for you.
-You can often tweak things using tag attributes. The code shown here is the
-shortest code needed to get it working.
+基础的 Admin 类的构造器就有很多参数。SonataAdminBundle 提供了一个编译器参数，它用来为你
+正确的配置参数。你可以经常通过标签属性来修改东西。这段代码展示了要程序跑起来的最短代码。
 
-Step 4: Register SonataAdmin custom Routes
+步骤 4: 登记 SonataAdmin 自定义路由
 ------------------------------------------
 
-SonataAdminBundle generates routes for the Admin classes on the fly. To load these
-routes, you have to make sure the routing loader of the SonataAdminBundle is executed:
+SonataAdminBundle 在运行是为 Admin 类生成路由。要加载这个路由，你得确保 SonataAdminBundle 的
+路由加载器运行起来了： 
 
 .. code-block:: yaml
 
@@ -208,22 +196,20 @@ routes, you have to make sure the routing loader of the SonataAdminBundle is exe
         type: sonata_admin
         prefix: /admin
 
-View the Category Admin Interface
+显示 Category 的管理界面
 ---------------------------------
 
-Now you've created the admin class for your category, you probably want to know
-how this looks like in the admin interface. Well, let's find out by going to
-http://localhost:8000/admin
+现在已经创建了 Category 的管理类了，你大概想要看看后台管理界面里它是啥样子的。
+好，我们通过访问 http://localhost:8000/admin 来看看
 
 .. image:: ../images/getting_started_category_dashboard.png
 
-Feel free to play around and add some categories, like "Symfony" and "Sonata
-Project". In the next chapters, you'll create an admin for the ``BlogPost``
-entity and learn more about this class.
+不要拘束，随便看看，添加一些类型，如 “Symfony” 和 “Sonata Project”。
+在下一章，我们将创建 ``BlogPost`` 数据实体的管理后台，并学习这个类的更多知识。
 
 .. tip::
 
-    If you're not seeing the nice labels, but instead something like
-    "link_add", you should make sure that you've `enabled the translator`_.
+    如果你没看到这个漂亮的标签，但却看到一些类似”link_add“的东西，你得看看你是不是
+    开启了 `translator`_.
 
-.. _`enabled the translator`: http://symfony.com/doc/current/book/translation.html#configuration
+.. _`translator`: http://symfony.com/doc/current/book/translation.html#configuration
