@@ -1,14 +1,12 @@
-Installation
+安装
 ============
 
-SonataAdminBundle is just a bundle and as such, you can install it at any
-moment during a project's lifecycle.
+SonataAdminBundle 仅仅是一个 bundle 包，所以你可以在一个项目生命周期的任何时刻来安装它。
 
-1. Download the Bundle
+1. 下载此 Bundle
 ----------------------
 
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
+打开一个终端，进入你的项目目录，执行下边的命令来下载这个 bundle 的最新稳定版：
 
 .. code-block:: bash
 
