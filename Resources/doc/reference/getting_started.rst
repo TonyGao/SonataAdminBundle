@@ -8,7 +8,7 @@
 * 步骤 2： 创建一个 Admin 服务
 * 步骤 3： 配置
 
-2.1 创建一个 Admin 类
+1.1 创建一个 Admin 类
 ---------------------
 
 SonataAdminBundle 通过图形界面帮助你管理你的数据，可以让你创建，更新或搜索你的模型的实例。这些操作
@@ -84,18 +84,16 @@ Admin 类会呈现你模型对每个管理操作的映射。其中，你可以�
         }
     }
 
-Implementing these four functions is the first step to creating an Admin class.
-Other options are available, that will let you further customize the way your model
-is shown and handled. Those will be covered in more advanced chapters of this manual.
+实现这四个函数是创建一个 Admin 类的第一步。也有其他选项，可以让你更深入的定义你模型的显示和处理。
+这些会在本手册的高级章节涉及到。
 
-Create an Admin service
+1.3 创建一个 Admin 服务
 -----------------------
 
-Now that you have created your Admin class, you need to create a service for it. This
-service needs to have the ``sonata.admin`` tag, which is your way of letting
-SonataAdminBundle know that this particular service represents an Admin class:
+现在你已经创建了你的 Admin 类，你需要为它创建一个服务。这个服务需要有 ``sonata.admin`` 标签，这是让
+ SonataAdminBundle 知道这个特定服务器表示一个 Admin 类的方法：
 
-Create either a new ``admin.xml`` or ``admin.yml`` file inside the ``src/AppBundle/Resources/config/`` folder:
+在 ``src/AppBundle/Resources/config/`` 目录里创建一个新的 ``admin.xml`` 或 ``admin.yml`` 文件：
 
 .. configuration-block::
 
@@ -130,32 +128,30 @@ Create either a new ``admin.xml`` or ``admin.yml`` file inside the ``src/AppBund
                     - [ setTranslationDomain, [AppBundle]]
                 public: true
 
-The example above assumes that you're using ``SonataDoctrineORMAdminBundle``.
-If you're using ``SonataDoctrineMongoDBAdminBundle``, ``SonataPropelAdminBundle`` or ``SonataDoctrinePhpcrAdminBundle`` instead, set ``manager_type`` option to ``doctrine_mongodb``, ``propel`` or ``doctrine_phpcr`` respectively.
+上边的例子假设你在使用 ``SonataDoctrineORMAdminBundle`` 。如果你使用 ``SonataDoctrineMongoDBAdminBundle`` , 
+``SonataPropelAdminBundle`` 或 ``SonataDoctrinePhpcrAdminBundle`` ，分别设置 ``manager_type`` 选项为 
+``doctrine_mongodb`` , ``propel`` 或 ``doctrine_phpcr`` 。
 
-The basic configuration of an Admin service is quite simple. It creates a service
-instance based on the class you specified before, and accepts three arguments:
+这个 Admin 服务的基本配置十分的简单。它创建了一个基于你之前设定的类的服务实例，并接受三个参数：
 
-    1. The Admin service's code (defaults to the service's name)
-    2. The model which this Admin class maps (required)
-    3. The controller that will handle the administration actions (defaults to ``SonataAdminBundle:CRUDController()``)
+    1. Admin 服务的代码( 默认是服务的名称 )
+    2. Admin 类所映射的模型( 必须的 )
+    3. 用来管理后台操作的控制器( 默认是 ``SonataAdminBundle:CRUDController()`` )
 
-Usually you just need to specify the second argument, as the first and third's default
-values will work for most scenarios.
+通常你只需要设定第二个参数，因为第一个和第三个的默认值在大多数情况下都可以工作。
 
-The ``setTranslationDomain`` call lets you choose which translation domain to use when
-translating labels on the admin pages. If you don't call ``setTranslationDomain``, SonataAdmin uses ``messages`` as translation domain.
-More info on the `Symfony translations page`_.
+``setTranslationDomain`` 的调用让你选取一个翻译作用域，其用于后台管理页面的标签被翻译时。如果你没调用 
+``setTranslationDomain`` ，SonataAdmin 使用 ``messages`` 作为翻译作用域。详见 Symfony 翻译页面
+`Symfony translations page`_.
 
-Now that you have a configuration file with your admin service, you just need to tell
-Symfony to load it. There are two ways to do so:
+现在你有一个 admin 服务的配置文件了。你只需要让 Symfony 来加载它。有两个方法实现：
 
-Have your bundle load it
+2.3.1 让你的 bundle 加载它
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Inside your bundle's extension file, using the ``load()`` method as described in the `Symfony cookbook`_.
+在你的 bundle 的扩展文件里，如文档所述 `Symfony cookbook`_ ，使用 load() 方法
 
-For ``admin.xml`` use:
+针对 ``admin.xml`` 的:
 
 .. code-block:: php
 
@@ -179,7 +175,7 @@ For ``admin.xml`` use:
         }
     }
 
-and for ``admin.yml``:
+针对 ``admin.yml`` 的:
 
 .. code-block:: php
 
@@ -204,13 +200,12 @@ and for ``admin.yml``:
         }
     }
 
-Importing it in the main config.yml
+2.3.2 在主文件  config.yml 导入它
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We recommend the to load the file in the Extension, but this way is possible, too.
+我们建议以扩展形式来加载此文件，但还有另外一个方法。
 
-You can include your new configuration file in the main ``config.yml`` (make sure that you
-use the correct file extension):
+我们可以将你的新配置文件在主文件 ``config.yml`` 里引入进来 ( 请确保你使用了正确的文件扩展名 )：
 
 .. configuration-block::
 
@@ -226,23 +221,23 @@ use the correct file extension):
             # for yaml
             - { resource: "@AppBundle/Resources/config/admin.yml" }
 
-Configuration
+2.4 配置
 -------------
 
-At this point you have basic administration actions for your model. If you visit ``http://yoursite.local/admin/dashboard`` again, you should now see a panel with
-your mapped model. You can start creating, listing, editing and deleting instances.
+基于此，你有了针对你模型的基本的管理操作。如果你再次访问 ``http://yousite.local/admin/dashborad`` ，
+你应该就可以看到你映射的模型的面板了。你可以开始创建，清列，编辑和删除实例了。
 
-You probably want to put your own project's name and logo on the top bar.
+你或许想要将你项目的名称和 logo 放到上边栏。
 
-Put your logo file here ``src/AppBundle/Resources/public/images/fancy_acme_logo.png``
+将你的 logo 文件放到 ``/src/AppBndle/Resources/public/images/facy_acme_logo.png``
 
-Install your assets:
+安装资源:
 
 .. code-block:: bash
 
     $ php app/console assets:install
 
-Now you can change your project's main config.yml file:
+现在你可以修改项目的主文件 config.yml 文件：
 
 .. configuration-block::
 
@@ -254,20 +249,16 @@ Now you can change your project's main config.yml file:
             title:      Acme
             title_logo: bundles/app/images/fancy_acme_logo.png
 
-Next steps - Security
+2.5 下一步 - 安全
 ---------------------
 
-As you probably noticed, you were able to access your dashboard and data by just
-typing in the URL. By default, the SonataAdminBundle does not come with any user
-management for ultimate flexibility. However, it is most likely that your application
-requires such a feature. The Sonata Project includes a ``SonataUserBundle`` which
-integrates the very popular ``FOSUserBundle``. Please refer to the :doc:`security` section of
-this documentation for more information.
+你或许已经注意到了，你只需要输入网址就可以访问你的仪表盘和数据了。默认，SonataAdminBundle 为了
+高度的灵活性不做任何用户管理。然而，大多数情况你的程序其实需要这个特性的。Sonata 项目包含一个
+ ``SonataUserBundle`` ，其整合了流行的 ``FOSUserBundle`` 。请参考文档的安全 :doc:`security` 
+ 部分来了解更多信息。
 
-Congratulations! You are ready to start using SonataAdminBundle. You can now map
-additional models or explore advanced functionalities. The following sections will
-each address a specific section or functionality of the bundle, giving deeper
-details on what can be configured and achieved with SonataAdminBundle.
+恭喜你！你已经开始使用 SonataAdminBundle 了。你现在可以映射额外的模型或探索高级功能了。下边的
+每个部分都会针对这个 bundle 特定的功能或部分，深入详述 SonataAdminBundle 哪些可配置和哪些可实现。
 
 .. _`Symfony cookbook`: http://symfony.com/doc/master/cookbook/bundles/extension.html#using-the-load-method
 .. _`Symfony translations page`: http://symfony.com/doc/current/book/translation.html#using-message-domains
