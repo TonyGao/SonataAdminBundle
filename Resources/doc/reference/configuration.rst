@@ -1,16 +1,15 @@
-Configuration
+3. 配置
 =============
 
 .. note::
 
-    This page will be removed soon, as it's content is being improved and moved to
-    other pages of the documentation. Please refer to each section's documentation for up-to-date
-    information on SonataAdminBundle configuration options.
+    本页很快会被删除，因为它的内容已经改变了，并会转移到本文档的其他页面。请参考每个部分的文档，在 
+    SonataAdminBundle 配置选项上的信息了解即时更新的信息。
 
-Configuration
+3.1 配置
 -------------
 
-Configuration options
+配置选项
 
 .. configuration-block::
 
@@ -21,20 +20,20 @@ Configuration options
         sonata_admin:
             security:
 
-                # the default value
+                # 默认值
                 handler: sonata.admin.security.handler.role
 
-                # use this service if you want ACL
+                # 如果你想用 ACL 使用这个服务
                 handler: sonata.admin.security.handler.acl
 
-Full Configuration Options
+完全配置选项
 --------------------------
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # Default configuration for extension with alias: "sonata_admin"
+        # 以别名 “sonata_admin” 命名的扩展的默认配置
         sonata_admin:
             security:
                 handler:              sonata.admin.security.handler.noop
@@ -44,7 +43,7 @@ Full Configuration Options
                     id:                   []
                 admin_permissions:
 
-                    # Defaults:
+                    # 默认的:
                     - CREATE
                     - LIST
                     - DELETE
@@ -54,7 +53,7 @@ Full Configuration Options
                     - MASTER
                 object_permissions:
 
-                    # Defaults:
+                    # 默认的:
                     - VIEW
                     - EDIT
                     - DELETE
@@ -68,7 +67,7 @@ Full Configuration Options
             options:
                 html5_validate:       true
 
-                # Auto order groups and admins by label or id
+                # 按照标签或 id 自动排序分析和管理
                 sort_admins:          false
                 confirm_exit:         true
                 use_select2:          true
@@ -78,12 +77,12 @@ Full Configuration Options
                 pager_links:          null
                 form_type:            standard
                 dropdown_number_groups_per_colums:  2
-                title_mode:           ~ # One of "single_text"; "single_image"; "both"
+                title_mode:           ~ # "single_text"; "single_image"; "both" 其中之一
 
-                # Enable locking when editing an object, if the corresponding object manager supports it.
+                # 如果相应的对象管理器支持，在编辑一个对象时就开启锁定模式。
                 lock_protection:      false
 
-                # Enable automatic registration of annotations with JMSDiExtraBundle
+                # 用 JMSDiExtraBundle 的 annotation 进行自动登记
                 enable_jms_di_extra_autoregistration: true
             dashboard:
                 groups:

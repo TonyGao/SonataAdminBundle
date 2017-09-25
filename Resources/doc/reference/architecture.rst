@@ -1,69 +1,62 @@
-Architecture
+4. 结构
 ============
 
-The architecture of the ``SonataAdminBundle`` is primarily inspired by the Django Admin
-Project, which is truly a great project. More information can be found at the
-`Django Project Website`_.
+``SonataAdminBundle`` 的架构主要受 Django Admin 项目的启发，它真的是一个伟大的项目。
+详见 Django 项目网站 `Django Project Website`_.
 
-If you followed the instructions on the :doc:`getting_started` page, you should by
-now have an ``Admin`` class and an ``Admin`` service. In this chapter, we'll discuss more in
-depth how it works.
+如果你跟着 :doc:`getting_started` 的页面照做了，你应该已经有一个 ``Admin`` 类和一个 ``Admin`` 服务了。
+在本章，我们会更深入的讨论它的工作原理。
 
-The Admin Class
+4.1 Admin 类
 ---------------
 
-The ``Admin`` class maps a specific model to the rich CRUD interface provided by
-``SonataAdminBundle``. In other words, using your ``Admin`` classes, you can configure
-what is shown by ``SonataAdminBundle`` in each CRUD action for the associated model.
-By now you've seen 3 of those actions in the ``getting started`` page: list,
-filter and form (for creation/editing). However, a fully configured ``Admin`` class
-can define more actions:
+``Admin`` 类映射一个特定的模型到一个由 ``SonataAdminBundle`` 提供的富 CRUD 界面。换言之，使用你的 
+Admin 类，你可以配置 SonataAdminBundle 在每个 CRUD 操作中为每个相关的模型显示哪些字段。
+现在你会看到``开始``页面里有三个操作：清单、过滤器和表单( 用于创建/编辑 )。然而，一个完整的配置过的 Admin 类
+可以定义更多的操作：
 
 =============       =========================================================================
-Actions             Description
+操作                 描述
 =============       =========================================================================
-list                The fields displayed in the list table
-filter              The fields available for filtering the list
-form                The fields used to create/edit the entity
-show                The fields used to show the entity
-batch actions       Actions that can be performed on a group of entities (e.g. bulk delete)
+list 清单            在清单表格中显示的字段
+filter 过滤器         用于过滤清单内容的字段
+form 表单            用于创建/编辑数据实体的字段
+show 显示            用于显示数据实体的字段
+批量操作              可以用于一组数据实体执行的操作( 如，批量删除 )
 =============       =========================================================================
 
 
-The ``Sonata\AdminBundle\Admin\AbstractAdmin`` class is provided as an easy way to
-map your models, by extending it. However, any implementation of the
-``Sonata\AdminBundle\Admin\AdminInterface`` can be used to define an ``Admin``
-service. For each ``Admin`` service, the following required dependencies are
-automatically injected by the bundle:
+``Sonata\AdminBundle\Admin\AbstractAdmin`` 类是提供的一个映射你数据模型的简单方法，只要扩展它就可以了。
+然而，任何 ``Sonata\AdminBundle\Admin\AdminInterface`` 的实现都可以被用来定义一个 ``Admin`` 服务。每个 
+``Admin`` 服务，下边的依赖需求都会自动由此 Bundle 注入：
 
 =========================       =========================================================================
-Class                           Description
+类                              描述
 =========================       =========================================================================
-ConfigurationPool               configuration pool where all Admin class instances are stored
-ModelManager                    service which handles specific code relating to your persistence layer (e.g. Doctrine ORM)
-FormContractor                  builds the forms for the edit/create views using the Symfony ``FormBuilder``
-ShowBuilder                     builds the show fields
-ListBuilder                     builds the list fields
-DatagridBuilder                 builds the filter fields
-Request                         the received http request
-RouteBuilder                    allows you to add routes for new actions and remove routes for default actions
-RouterGenerator                 generates the different URLs
-SecurityHandler                 handles permissions for model instances and actions
-Validator                       handles model validation
-Translator                      generates translations
-LabelTranslatorStrategy         a strategy to use when generating labels
-MenuFactory                     generates the side menu, depending on the current action
+ConfigurationPool               配置池，所有 Admin 类实例存储的地方
+ModelManager                    是一个服务，用于处理涉及到你持久化层的特定代码( 持久化层，如 Doctrine ORM ) 
+FormContractor                  使用 Symfony 的 ``FormBuilder`` 构建表单的编辑/创建的视图
+ShowBuilder                     构建显示字段
+ListBuilder                     构建清单的字段
+DatagridBuilder                 构建过滤器的字段
+Request                         收到的 http 请求
+RouteBuilder                    允许你为新的操作添加添加路由，并且为默认操作删除路由
+RouterGenerator                 生成不同的 URL
+SecurityHandler                 为模型实例和操作处理权限
+Validator                       处理模型验证
+Translator                      生成翻译
+LabelTranslatorStrategy         当生成标签是所使用的策略
+MenuFactory                     生成侧边菜单，取决于当前的操作
 =========================       =========================================================================
 
 .. note::
 
-    Each of these dependencies is used for a specific task, briefly described above.
-    If you wish to learn more about how they are used, check the respective documentation
-    chapter. In most cases, you won't need to worry about their underlying implementation.
+    这些依赖关系的每一个都用于一个特定的任务，如上所述。如果你想学习更多它们的用法，就查阅文档的各自的
+    章节。大多数情况，你不需要担心它们的底层实现。
 
 
-All of these dependencies have default values that you can override when declaring any of
-your ``Admin`` services. This is done using a ``call`` to the matching ``setter`` :
+所有这些依赖的默认值都可以通过声明你自己的 ``Admin`` 服务来覆盖。这是通过调用一个 ``call`` 来匹配 ``setter``
+来完成的：
 
 .. configuration-block::
 
@@ -99,27 +92,25 @@ different label translator strategy, replacing the default one. Notice that
 ``sonata.admin.label.strategy.underscore`` is a service provided by ``SonataAdminBundle``,
 but you could just as easily use a service of your own.
 
-CRUDController
+这里，我们声明同样的 ``Admin`` 服务，如 :doc:`getting_started` 章节中，但使用了不同的标签翻译器策略，
+以替换默认的策略。注意 ``sonata.admin.label.strategy.underscore`` 是由 ``SonataAdminBundle`` 提供的服务，
+但您可以轻易的使用自己的服务。
+
+4.2 CRUDController
 --------------
 
-The ``CRUDController`` contains the actions you have available to manipulate
-your model instances, like create, list, edit or delete. It uses the ``Admin``
-class to determine its behavior, like which fields to display in the edit form,
-or how to build the list view. Inside the ``CRUDController``, you can access the
-``Admin`` class instance via the ``$admin`` variable.
+``CRUDController`` 包含操作模型实例的操作，如创建、列表、编辑或删除。它使用 ``Admin`` 类来确定其行为，比如在编辑表单中
+显示哪些字段，或怎么构建列表视图。在 ``CRUDController`` 内部，你可以通过 ``$admin`` 变量进入 ``Admin`` 类实例。
 
 .. note::
 
-    `CRUD`_ is an acronym for "Create, Read, Update and Delete"
+    `CRUD`_ 是 “Create, Read, Update 和 Delete” 的首字母缩写
 
-The ``CRUDController`` is no different from any other Symfony controller, meaning
-that you have all the usual options available to you, like getting services from
-the Dependency Injection Container (DIC).
+``CRUDController`` 与其他 Symfony 控制器没什么不同，这意味着你可以使用所有常用选项，如通过依赖注入容器(DIC)来
+获得服务。
 
-This is particularly useful if you decide to extend the ``CRUDController`` to
-add new actions or change the behavior of existing ones. You can specify which controller
-to use when declaring the ``Admin`` service by passing it as the 3rd argument. For example
-to set the controller to ``AppBundle:PostAdmin``:
+如果你决定扩展 ``CRUDController`` 来添加新的操作或修改已有操作的行为，这将非常有用。当声明 ``Admin`` 服务时，将第三个参数
+用于设定使用哪个控制器。例如设置控制器为 ``AppBundle:PostAdmin``：
 
 .. configuration-block::
 
@@ -154,6 +145,8 @@ When extending ``CRUDController``, remember that the ``Admin`` class already has
 a set of automatically injected dependencies that are useful when implementing several
 scenarios. Refer to the existing ``CRUDController`` actions for examples of how to get
 the best out of them.
+
+当扩展 ``CRUDController`` 时，
 
 In your overloaded CRUDController you can overload also these methods to limit
 the number of duplicated code from SonataAdmin:
