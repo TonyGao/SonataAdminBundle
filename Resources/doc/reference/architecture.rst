@@ -87,11 +87,6 @@ MenuFactory                     生成侧边菜单，取决于当前的操作
                     - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
                 public: true
 
-Here, we declare the same ``Admin`` service as in the :doc:`getting_started` chapter, but using a
-different label translator strategy, replacing the default one. Notice that
-``sonata.admin.label.strategy.underscore`` is a service provided by ``SonataAdminBundle``,
-but you could just as easily use a service of your own.
-
 这里，我们声明同样的 ``Admin`` 服务，如 :doc:`getting_started` 章节中，但使用了不同的标签翻译器策略，
 以替换默认的策略。注意 ``sonata.admin.label.strategy.underscore`` 是由 ``SonataAdminBundle`` 提供的服务，
 但您可以轻易的使用自己的服务。
@@ -141,25 +136,19 @@ but you could just as easily use a service of your own.
                     - [ setTranslationDomain, [AppBundle]]
                 public: true
 
-When extending ``CRUDController``, remember that the ``Admin`` class already has
-a set of automatically injected dependencies that are useful when implementing several
-scenarios. Refer to the existing ``CRUDController`` actions for examples of how to get
-the best out of them.
+当扩展 ``CRUDController`` 时，请记住 ``Admin`` 类已经有了很多自动注入的依赖，在很多情况下它们都
+很有用。以当前的 ``CRUDController`` 操作为例怎么能最大限度的利用它们。
 
-当扩展 ``CRUDController`` 时，
+如果你在重载 CRUDController ，你可以通过 SonataAdmin 重载这些方法来限定重复代码的数量：
+* ``preCreate``: 从 ``createAction`` 调用
+* ``preEdit``: 从 ``editAction`` 盗用
+* ``preDelete``: 从 ``deleteAction`` 调用
+* ``preShow``: 从 ``showAction`` 调用
+* ``preList``: 从 ``listAction`` 调用
 
-In your overloaded CRUDController you can overload also these methods to limit
-the number of duplicated code from SonataAdmin:
-* ``preCreate``: called from ``createAction``
-* ``preEdit``: called from ``editAction``
-* ``preDelete``: called from ``deleteAction``
-* ``preShow``: called from ``showAction``
-* ``preList``: called from ``listAction``
+在检查准入权限以及从数据库获取对象之后调用这些方法。如果您需要在某些条件下将用户重定向到某个其他页面，则可以使用它们。
 
-These methods are called after checking the access rights and after retrieving the object
-from database. You can use them if you need to redirect user to some other page under certain conditions.
-
-Fields Definition
+字段定义
 -----------------
 
 Your ``Admin`` class defines which of your model's fields will be available in each
@@ -167,6 +156,10 @@ action defined in your ``CRUDController``. So, for each action, a list of field 
 is generated. These lists are implemented using the ``FieldDescriptionCollection`` class
 which stores instances of ``FieldDescriptionInterface``. Picking up on our previous
 ``PostAdmin`` class example:
+
+你的 ``Admin`` 类定义了在你 ``CRUDController`` 中定义的每个操作中哪些模型字段可用。所以，针对每个操作，
+都会生成一个字段映射列表。这些列表使用 ``FieldDescriptionCollection`` 类实现，其存储了 
+``FieldDescriptionInterface`` 的实例。以我们之前的 ``PostAdmin`` 类为例：
 
 .. code-block:: php
 
@@ -183,7 +176,7 @@ which stores instances of ``FieldDescriptionInterface``. Picking up on our previ
 
     class PostAdmin extends AbstractAdmin
     {
-        // Fields to be shown on create/edit forms
+        // 在创建/编辑表单中显示的字段
         protected function configureFormFields(FormMapper $formMapper)
         {
             $formMapper
@@ -194,14 +187,14 @@ which stores instances of ``FieldDescriptionInterface``. Picking up on our previ
                     'class' => 'AppBundle\Entity\User'
                 ))
 
-                // if no type is specified, SonataAdminBundle tries to guess it
+                // 如果没设定类型，SonataAdminBundle 会猜测它
                 ->add('body')
 
                 // ...
             ;
         }
 
-        // Fields to be shown on filter forms
+        // 在过滤器表单里显示的字段
         protected function configureDatagridFilters(DatagridMapper $datagridMapper)
         {
             $datagridMapper
@@ -210,7 +203,7 @@ which stores instances of ``FieldDescriptionInterface``. Picking up on our previ
             ;
         }
 
-        // Fields to be shown on lists
+        // 在列表中显示的字段
         protected function configureListFields(ListMapper $listMapper)
         {
             $listMapper
@@ -220,7 +213,7 @@ which stores instances of ``FieldDescriptionInterface``. Picking up on our previ
             ;
         }
 
-        // Fields to be shown on show action
+        // 在显示操作中显示的字段
         protected function configureShowFields(ShowMapper $showMapper)
         {
             $showMapper
@@ -232,88 +225,72 @@ which stores instances of ``FieldDescriptionInterface``. Picking up on our previ
         }
     }
 
-Internally, the provided ``Admin`` class will use these three functions to create three
-``FieldDescriptionCollection`` instances:
+在内部，提供的 ``Admin`` 类将使用这三个函数来创建三个 ``FieldDescriptionCollection`` 实例：
 
-* ``$formFieldDescriptions``, containing three ``FieldDescriptionInterface`` instances
-  for title, author and body
-* ``$filterFieldDescriptions``, containing two ``FieldDescriptionInterface`` instances
-  for title and author
-* ``$listFieldDescriptions``, containing three ``FieldDescriptionInterface`` instances
-  for title, slug and author
-* ``$showFieldDescriptions``, containing four ``FieldDescriptionInterface`` instances
-  for id, title, slug and author
+* ``$formFieldDescriptions``, 包含三个 ``FieldDescriptionInterface`` 实例, title, author 和 body
+* ``$filterFieldDescriptions``, 包含两个 ``FieldDescriptionInterface`` 实例, title 和 author 
+* ``$listFieldDescriptions``, 包含三个 ``FieldDescriptionInterface`` 实例, title, slug 和 author
+* ``$showFieldDescriptions``, 包含四个 ``FieldDescriptionInterface`` 实例, id, title, slug 和 author
 
-The actual ``FieldDescription`` implementation is provided by the storage abstraction
-bundle that you choose during the installation process, based on the
-``BaseFieldDescription`` abstract class provided by ``SonataAdminBundle``.
+实际的 ``FieldDescription`` 实现由按安装过程中你选取的存储抽象 bundle 提供, 基于 ``BaseFieldDescription``
+ 的抽象类由 ``SonataAdminBundle`` 提供。
 
-Each ``FieldDescription`` contains various details about a field mapping. Some of
-them are independent of the action in which they are used, like ``name`` or ``type``,
-while others are used only in specific actions. More information can be found in the
-``BaseFieldDescription`` class file.
+每个 ``FieldDescription`` 包含关于一个字段映射的各种细节。它们中的一些是独立于它们使用的操作之外的，
+如 ``name`` 或 ``type`` , 而其他的仅用于特定的操作。更多信息可以在 ``BaseFieldDescription`` 类
+文件中找到。
 
-In most scenarios, you will not actually need to handle the ``FieldDescription`` yourself.
-However, it is important that you know it exists and how it is used, as it sits at the
-core of ``SonataAdminBundle``.
+在大多情况下，你都不需要自己实际处理 ``FieldDescription`` 。然而，你还是得知道它的存在以及怎么用它，因为它
+对 ``SonataAdminBundle`` 至关重要。
 
-Templates
+模板
 ---------
 
-Like most actions, ``CRUDController`` actions use view files to render their output.
-``SonataAdminBundle`` provides ready to use views as well as ways to easily customize them.
+就像大多数操作，``CRUDController`` 操作使用视图文件来渲染它们的输出。``SonataAdminBundle`` 提供了
+开箱即用的视图以及轻松自定义它们的方法。
 
-The current implementation uses ``Twig`` as the template engine. All templates
-are located in the ``Resources/views`` directory of the bundle.
+当前的实现使用了 ``Twig`` 作为模板引擎。所有的模板都位于此 bundle 的 ``Resources/views`` 目录下。
 
-There are two base templates, one of these is ultimately used in every action:
+有两个基础模板，其中一个最终用于每个操作：
 
 * ``SonataAdminBundle::standard_layout.html.twig``
 * ``SonataAdminBundle::ajax_layout.html.twig``
 
-Like the names say, one if for standard calls, the other one for AJAX.
+如名字一样，其中一个是为标准调用准备的，另一个是为 Ajax 的。
 
-The subfolders include Twig files for specific sections of ``SonataAdminBundle``:
+子文件夹包含了 ``SonataAdminBundle`` 的特定部分的 Twig 文件：
 
 Block:
-  ``SonataBlockBundle`` block views. By default there is only one, which
-  displays all the mapped classes on the dashboard
+  ``SonataBlockBundle`` block 视图。默认只有一个，其在控制面板显示所有已映射的类
 Button:
-  Buttons such as ``Add new`` or ``Delete`` that you can see across several
-  CRUD actions
+  按钮，如 ``添加`` 或 ``删除`` 这些跨多个 CRUD 操作的 
 CRUD:
-  Base views for every CRUD action, plus several field views for each field type
+  每个 CRUD 操作的基础视图，为每个字段类型添加几个字段视图
 Core:
+  控制面板视图，结合已放弃和残余的 twig 文件。
   Dashboard view, together with deprecated and stub twig files.
 Form:
-  Views related to form rendering
+  设计表单渲染的视图
 Helper:
-  A view providing a short object description, as part of a specific form field
-  type provided by ``SonataAdminBundle``
+  提供一个简短的对象描述的视图，作为 ``SonataAdminBundle`` 提供的一个特定表单字段的一部分
 Pager:
-  Pagination related view files
+  分页相关的视图文件
 
-These will be discussed in greater detail in the specific :doc:`templates` section, where
-you will also find instructions on how to configure ``SonataAdminBundle`` to use your templates
-instead of the default ones.
+这些都会在 :doc:`templates` 模板文档详细描述，你还会找到配置 ``SonataAdminBundle`` 来使用自定义模板的方法。
 
-Managing ``Admin`` Service
+管理 ``Admin`` 服务
 --------------------------
 
-Your ``Admin`` service definitions are parsed when Symfony is loaded, and handled by
-the ``Pool`` class. This class, available as the ``sonata.admin.pool`` service from the
-DIC, handles the ``Admin`` classes, lazy-loading them on demand (to reduce overhead)
-and matching each of them to a group. It is also responsible for handling the top level
-template files, administration panel title and logo.
+你的 ``Admin`` 服务定义会在 Symofony 加载时被解析，并被 ``Pool`` 类处理。这个类可以从依赖注入容器的 
+``sonata.admin.pool`` 服务获取，来处理 ``Admin`` 类，在后台懒加载它们(为了减少负载)，并把它们匹配到
+各自的分组。它也可以负责处理顶级模板文件，管理员面板标题和logo 。
 
-Create child admins
+创建子管理
 -------------------
 
-Let us say you have a ``PlaylistAdmin`` and a ``VideoAdmin``. You can optionally declare the ``VideoAdmin``
-to be a child of the ``PlaylistAdmin``. This will create new routes like, for example, ``/playlist/{id}/video/list``,
-where the videos will automatically be filtered by post.
+假设你有一个 ``PlaylistAdmin`` 和一个 ``VideoAdmin`` 。你可以选择声明 ``VideoAdmin`` 是 ``PlaylistAdmin`` 的子管理。
+这将创建新的路由，如 ``/playlist/{id}/video/list``, 那么这些视频将自动由发帖来过滤。
 
-To do this, you first need to call the ``addChild`` method in your ``PlaylistAdmin`` service configuration:
+要做到这点，你首先需要调用 ``PlaylistAdmin`` 服务配置里的这个 ``addChild`` 方法
 
 .. configuration-block::
 
@@ -328,7 +305,7 @@ To do this, you first need to call the ``addChild`` method in your ``PlaylistAdm
             </call>
         </service>
 
-Then, you have to set the VideoAdmin ``parentAssociationMapping`` attribute to ``playlist`` :
+然后，你需要设定 VideoAdmin ``parentAssociationMapping`` 属性为 ``playlist`` :
 
 .. code-block:: php
 
@@ -342,7 +319,7 @@ Then, you have to set the VideoAdmin ``parentAssociationMapping`` attribute to `
     {
         protected $parentAssociationMapping = 'playlist';
 
-        // OR
+        // 或
 
         public function getParentAssociationMapping()
         {
@@ -350,7 +327,7 @@ Then, you have to set the VideoAdmin ``parentAssociationMapping`` attribute to `
         }
     }
 
-To display the ``VideoAdmin`` extend the menu in your ``PlaylistAdmin`` class:
+要显示 ``VideoAdmin`` 就在你的 ``PlaylistAdmin`` 类里扩展菜单
 
 .. code-block:: php
 
@@ -389,11 +366,10 @@ To display the ``VideoAdmin`` extend the menu in your ``PlaylistAdmin`` class:
         }
     }
 
-It also possible to set a dot-separated value, like ``post.author``, if your parent and child admins are not directly related.
+如果你的父与子管理不是直接相关的，也可以设定点分隔值，如 ``post.author`` 。
 
-Be wary that being a child admin is optional, which means that regular routes
-will be created regardless of whether you actually need them or not. To get rid
-of them, you may override the ``configureRoutes`` method::
+小心子管理只是一个选项，这意味着常规的路由将被创建，无论你真的是否需要它。要摆脱它，你需要
+覆盖 ``configureRoutes`` 方法::
 
     <?php
     
@@ -410,13 +386,13 @@ of them, you may override the ``configureRoutes`` method::
         {
             if ($this->isChild()) {
 
-                // This is the route configuration as a child
+                // 这是作为子管理的路由配置
                 $collection->clearExcept(['show', 'edit']);
 
                 return;
             }
 
-            // This is the route configuration as a parent
+            // 这是作为父管理的路由配置
             $collection->clear();
 
         }
