@@ -1,15 +1,12 @@
-Dashboard
+仪表盘
 =========
 
-The Dashboard is the main landing page. By default it lists your mapped models,
-as defined by your ``Admin`` services. This is useful to help you start using
-``SonataAdminBundle`` right away, but there is much more that you can do to take
-advantage of the Dashboard.
+仪表盘是主要的页面。默认它陈列了在 ``Admin`` 服务中定义的已映射的模型。这有助于你快速开始使用
+``SonataAdminBundle`` ，但仪表盘的优点还远不止这些。
 
-The Dashboard is, by default, available at ``/admin/dashboard``, which is handled by
-the ``SonataAdminBundle:Core:dashboard`` controller action. The default view file for
-this action is ``SonataAdminBundle:Core:dashboard.html.twig``, but you can change
-this in your ``config.yml``:
+默认的仪表盘在 ``/admin/dashboard``, 其由 ``SonataAdminBundle:Core:dashboard`` 控制器操作
+来处理。这个操作的默认视图文件是 ``SonataAdminBundle:Core:dashboard.html.twig``, 但你可以在
+你的 ``config.yml`` 里对它进行修改:
 
 .. configuration-block::
 
@@ -23,43 +20,37 @@ this in your ``config.yml``:
 
 .. note::
 
-    This view, like most of the ``SonataAdminBundle`` views, extends a global
-    template file, which also contains significant parts to the page. More information
-    about this is available in the :doc:`templates` chapter.
+    此视图像 ``SonataAdminBundle`` 的大多数视图一样，扩展了一个全局的模板文件，其包含了页面的重要部分。
+    详细信息请查阅 :doc:`templates` 模板章节。
 
 Blocks
 ------
 
-The Dashboard is actually built using ``Blocks`` from ``SonataBlockBundle``. You
-can learn more about this bundle and how to build your own Blocks on the
-`SonataBlock documentation page`_.
+仪表盘实际上使用了 ``SonataBlockBundle`` 的 block 来构建的。你可以通过 `SonataBlock documentation page`_
+来学习这个 bundle 以及怎样构建你自己的 block 。
 
-The ``Admin`` list block
+``Admin`` 列表 block
 ------------------------
 
-The ``Admin`` list is a ``Block`` that fetches information from the ``Admin`` service's
-``Pool`` and prints it in the nicely formatted list you have on your default Dashboard.
-The ``Admin`` list is defined by the ``sonata.admin.block.admin_list`` service, which is
-implemented by the ``Block\AdminListBlockService`` class. It is then rendered using the
-``SonataAdminBundle:Block:block_admin_list.html.twig`` template file.
+``Admin`` 列表是一个 ``Block`` ，其从 ``Admin`` 服务的 ``Pool`` 获取信息并将它以漂亮的列表格式
+打印到你默认的仪表盘上。``Admin`` 列表是由 ``sonata.admin.block.admin.admin_list`` 服务定义的，
+其实现自 ``Block\AdminListBlockService`` 类。然后它使用 ``SonataAdminBundle:Block:block_admin_list.html.twig``
+模板文件渲染出来。
 
-Feel free to take a look at these files. You'll find the code rather short and easy to
-understand, and it will be a great help when implementing your own blocks.
+闲来看看这些文件。你会发现它的代码特别简单并易于理解，对于你实现自己的 block 也大有裨益。
 
-Configuring the ``Admin`` list
+配置 ``Admin`` 列表
 ------------------------------
 
-As you probably noticed by now, the ``Admin`` list groups ``Admin`` mappings together.
-There are several ways in which you can configure these groups.
+你现在或许注意到了，``Admin`` 列表将 ``Admin`` 映射组合到了一起。有几种方法可以用来配置这些组。
 
-By default the admins are ordered the way you defined them. With the setting ``sort_admins``
-groups and admins will be ordered by their respective label with a fallback to the admin id.
+默认管理是有你定义它们的顺序排序的。用 ``sort_admins`` 设置，分组和管理将按相应的带一个回执到 admin id 
+的标签进行排序。
 
-Using the ``Admin`` service declaration
+使用 ``Admin`` 服务声明
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first, and most commonly used, method is to set a group when defining your ``Admin``
-services:
+当定义你的 ``Admin`` 服务时第一个也是最常用的方法是设定一个分组:
 
 .. configuration-block::
 
@@ -90,8 +81,7 @@ services:
                     - ~
                 public: true
 
-In these examples, notice the ``group`` tag, stating that this particular ``Admin``
-service belongs to the ``Content`` group.
+在这些示例里，注意 ``group`` 标签，表示了这个特定的 ``Admin`` 服务属于 ``Content`` 组。
 
 .. configuration-block::
 
@@ -122,21 +112,18 @@ service belongs to the ``Content`` group.
                     - AppBundle\Entity\Post
                     - ~
 
-In this example, the labels are translated by ``AppBundle``, using the given
-``label_catalogue``. So, you can use the above examples to support multiple languages
-in your project.
+在这个示例里，翻译标签由 ``AppBundle`` 翻译，使用给定的 ``label_catalogue`` 。因此你可以使用上边的例子
+来在你的项目中提供多语言支持。
 
 .. note::
 
-    You can use parameters (e.g. ``%app_admin.group_post%``) for the group names
-    in either scenario.
+    你可以在任何情况下使用参数(如，``%app_admin.group_post%``) 作为组名。
 
-Using the ``config.yml``
+使用 ``config.yml``
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can also configure the ``Admin`` list in your ``config.yml`` file. This
-configuration method overrides any settings defined in the Admin service
-declarations.
+你也可以在你的 ``config.yml`` 文件里配置 ``Admin`` 列表。这个配置方法覆盖在 Admin 
+服务中的任何设置声明。
 
 .. configuration-block::
 
@@ -163,45 +150,36 @@ declarations.
 
 .. note::
 
-    This is an academic, full configuration, example. In real cases, you will usually
-    not need to use all the displayed options. To use a default value for any setting
-    either leave out that key or use the ``~`` value for that option.
+    这是一个学术的、完全的配置示例。在实际情况中，通常不需要使用全部所示的选项。对任何设定使用默认值
+    只要不填写或使用 ``~`` 作为选项值即可。
 
-This configuration specifies that the ``app.admin.group.content`` group uses the
-``app.admin.group.content`` label, which is translated using the ``AppBundle``
-translation catalogue (the same label and translation configuration that we declared
-previously, in the service definition example).
+这个配置设定 ``app.admin.group.content`` 分组使用 ``app.admin.group.content`` 翻译标签，
+其使用 ``AppBundle`` 翻译目录进行翻译(和我们之前在服务定义的示例中声明了同样的翻译标签和翻译配置)。
 
-It also states that the ``app.admin.group.content`` group contains just the
-``app.admin.post`` ``Admin`` mapping, meaning that any other ``Admin`` services
-declared as belonging to this group will not be displayed here.
+它还指出 ``app.admin.group.content`` 分组仅包含了 ``app.admin.post`` ``Admin`` 映射，
+也就是说任何其他属于这个分组的 ``Admin`` 服务声明将不会在这里显示。
 
-Secondly, we declare a ``app.admin.group.blog`` group as having all its default items
-(i.e. the ones specified in the ``Admin`` service declarations), plus an *additional*
-``sonata.admin.page`` mapping, that was not initially part of this group.
+第二，我们声明一个 ``app.admin.group.blog`` 分组拥有全部默认选项(如，在 ``Admin`` 服务声明中设定的那样)，
+添加一个 *额外的* ``sonata.admin.page`` 映射，最初不属于这个分组。 
 
-We also use the ``roles`` option here, which means that only users with the ``ROLE_ONE``
-or ``ROLE_TWO`` privileges will be able to see this group, as opposed to the default setting
-which allows everyone to see a given group. Users with ``ROLE_SUPER_ADMIN`` are always
-able to see groups that would otherwise be hidden by this configuration option.
+我们也在这里使用 ``roles`` 选项，这意味着只有具有 ``ROLE_ONE`` 或 ``ROLE_TWO`` 权限的用户才能能够看到此组，
+而不是默认设置允许每个人都看到给定的分组。始终拥有 ``ROLE_SUPER_ADMIN`` 的用户始终能够看到被此配置选项隐藏的
+组所不能看到的内容。
 
-The third group, ``app.admin.group.misc``, is set up as a group which uses all its
-default values, as declared in the service declarations.
+第三个分组, ``app.admin.group.misc``, 被用来设定一个只使用默认值的分组，在服务声明中声明默认值。
 
-
-Adding more Blocks
+添加更多 Block
 ------------------
 
-Like we said before, the Dashboard comes with a default ``Admin`` list block, but
-you can create and add more blocks to it.
+就像我们以前说的，仪表盘默认自带一个 ``Admin`` 列表的块, 但你你可以为它创建和添加更多的块。
 
 .. figure:: ../images/dashboard.png
    :align: center
    :alt: Dashboard
    :width: 500
 
-In this screenshot, in addition to the default ``Admin`` list block on the left, we added
-a text block and RSS feed block on the right. The configuration for this scenario would be:
+在这张截图中，除了左边的默认 ``Admin`` 列表块之外，我们还在右侧添加了一个文本块和 RSS 订阅块。
+此方案的配置为：
 
 .. configuration-block::
 
@@ -235,20 +213,16 @@ a text block and RSS feed block on the right. The configuration for this scenari
 
 .. note::
 
-    Blocks may accept/require additional settings to be passed in order to
-    work properly. Refer to the associated documentation/implementation to
-    get more information on each block's options and requirements.
+    块可以接受/需要额外传入配置来更好的工作。参考相关的文档/实现来了解关于每个块选项和要求
+    的更多信息。
 
-    You can also configure the ``roles`` section to configure users that can
-    view the block.
+    你也可以配置 ``roles`` 部分来配置可以查看此块的用户。
 
-Display two ``Admin`` list blocks with different dashboard groups
+为不同的仪表盘分组显示两个 ``Admin`` 列表块
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The same block can have multiple instances, and be displayed multiple times
-across the Dashboard using different configuration settings for each instance.
-A particular example is the ``Admin`` list block, which can be configured to
-suit this scenario.
+同一个块可以有多个实例，并且在每个实例使用不同的配置的仪表盘中多次显示。一个特定的例子是
+``Admin`` 列表块，其可以配置为适合这种场景。
 
 .. configuration-block::
 
@@ -260,7 +234,7 @@ suit this scenario.
             dashboard:
                 blocks:
 
-                    # display two dashboard blocks
+                    # 显示两个仪表盘块
                     -
                         position: left
                         type: sonata.admin.block.admin_list
@@ -286,17 +260,15 @@ suit this scenario.
                         items:
                             - sonata.page.admin.myitem4
 
-In this example, you would have two ``admin_list`` blocks on your dashboard, each
-of them containing just the respectively configured groups.
+在这个例子里，你的仪表盘酱油两个 ``admin_list`` 块，每个块都仅包含各自配置的分组。
 
 .. _`SonataBlock documentation page`:  https://sonata-project.org/bundles/block/master/doc/index.html
 
 
-Statistic Block
+统计块
 ~~~~~~~~~~~~~~~
 
-A statistic block can be used to display a simple counter with a color, an font awesome icon and a text. A
-counter is related to the filters from one admin
+一个统计块可以用于显示一个带有颜色的简单计数器，font awesome 图标和文本。计数器与某个管理内容的过滤器相关
 
 .. configuration-block::
 
@@ -306,21 +278,21 @@ counter is related to the filters from one admin
             dashboard:
                 blocks:
                     -
-                        class:    col-lg-3 col-xs-6          # twitter bootstrap responsive code
-                        position: top                        # zone in the dashboard
+                        class:    col-lg-3 col-xs-6          # bootstrap 的响应代码
+                        position: top                        # 仪表盘的区域
                         type:     sonata.admin.block.stats   # block id
                         settings:
-                            code:  sonata.page.admin.page    # admin code - service id
-                            icon:  fa-magic                  # font awesome icon
+                            code:  sonata.page.admin.page    # 管理内容代码 - 服务 id
+                            icon:  fa-magic                  # font awesome 图标
                             text:  Edited Pages
-                            color: bg-yellow                 # colors: bg-green, bg-red and bg-aqua
-                            filters:                         # filter values
+                            color: bg-yellow                 # 颜色: bg-green, bg-red and bg-aqua
+                            filters:                         # 过滤器值
                                 edited: { value: 1 }
 
-Dashboard Layout
+仪表盘布局
 ~~~~~~~~~~~~~~~~
 
-Supported positions right now are the following:
+现在支持的位置包括：
 
 * top
 * left
@@ -328,7 +300,7 @@ Supported positions right now are the following:
 * right
 * bottom
 
-The layout is as follows:
+布局包括:
 
 .. code-block:: bash
 
@@ -340,7 +312,7 @@ The layout is as follows:
 
     BOTTOM BOTTOM BOTTOM
 
-On ``top`` and ``bottom`` positions, you can also specify an optional ``class`` option to set the width of the block.
+在 ``top`` 和 ``bottom`` 的位置，你也可以设定一个选项 ``class`` 来设定这个块的宽度。
 
 .. configuration-block::
 
@@ -352,19 +324,18 @@ On ``top`` and ``bottom`` positions, you can also specify an optional ``class`` 
             dashboard:
                 blocks:
 
-                    # display dashboard block in the top zone with a col-md-6 css class
+                    # 在顶部以 col-md-6 的 css 类来显示仪表盘块
                     -
                         position: top
                         class: col-md-6
                         type: sonata.admin.block.admin_list
 
-Configuring what actions are available for each item on the dashboard
+配置仪表盘中每个子项可用的操作
 ---------------------------------------------------------------------
 
-By default. A "list" and a "create" option are available for each item on the
-dashboard. If you created a custom action and want to display it along the
-other two on the dashboard, you can do so by overriding the
-``getDashboardActions()`` method of your admin class:
+默认，在仪表盘每个子项都有一个 ``列表`` 和一个 ``创建`` 选项。如果你创建了一个自定义操作，
+想在仪表盘和其他两个一块显示出来，你可以通过覆盖你 admin 类的 ``getDashboardActions()``
+方法来实现：
 
 .. code-block:: php
 
@@ -383,8 +354,8 @@ other two on the dashboard, you can do so by overriding the
                 'label'              => 'Import',
                 'url'                => $this->generateUrl('import'),
                 'icon'               => 'import',
-                'translation_domain' => 'SonataAdminBundle', // optional
-                'template'           => 'SonataAdminBundle:CRUD:dashboard__action.html.twig', // optional
+                'translation_domain' => 'SonataAdminBundle', // 可选的
+                'template'           => 'SonataAdminBundle:CRUD:dashboard__action.html.twig', // 可选的
             );
 
             return $actions;
@@ -392,7 +363,7 @@ other two on the dashboard, you can do so by overriding the
 
     }
 
-You can also hide an action from the dashboard by unsetting it:
+你也可以通过 unset 它来在仪表盘隐藏一个操作：
 
 .. code-block:: php
 
@@ -414,6 +385,5 @@ You can also hide an action from the dashboard by unsetting it:
 
     }
 
-If you do this, you need to be aware that the action is only hidden. it will
-still be available by directly calling its URL, unless you prevent that using
-proper security measures (e.g. ACL or role based).
+如果你这么做了，你需要注意这个操作仅仅是隐藏了。通过直接访问它的网址它还是可以使用的，除非你
+使用适合的安全措施来防止访问(如，ACL 或者基于角色的)。
