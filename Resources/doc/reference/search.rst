@@ -1,17 +1,16 @@
-Search
+搜索
 ======
 
-The admin comes with a basic global search available in the upper navigation menu. The search iterates over admin classes
-and look for filter with the option ``global_search`` set to true. If you are using the ``SonataDoctrineORMBundle``
-any text filter will be set to ``true`` by default.
+在导航菜单上方后台自带了一个基本的全局搜索。搜索遍历 admin 类来寻找 ``global_search`` 设置为 true 的过滤器。如果你使用
+``SonataDoctrineORMBundle`` 那么所有文本过滤器都将默认设定为 ``true`` 。
 
-Customization
+自定义
 -------------
 
-The main action is using the template ``SonataAdminBundle:Core:search.html.twig``. And each search is handled by a
-``block``, the template for the block is ``SonataAdminBundle:Block:block_search_result.html.twig``.
+主要的操作是用 ``SonataAdminBundle:Core:search.html.twig`` 模板。每个搜索都被一个 ``block`` 处理，这个块的模板是 
+``SonataAdminBundle:Block:block_search_result.html.twig`` 。
 
-The default template values can be configured in the configuration section
+默认的模板值可以在配置部分进行配置
 
 .. configuration-block::
 
@@ -21,11 +20,11 @@ The default template values can be configured in the configuration section
 
         sonata_admin:
             templates:
-                # other configuration options
+                # 其他配置选项
                 search:              SonataAdminBundle:Core:search.html.twig
                 search_result_block: SonataAdminBundle:Block:block_search_result.html.twig
                 
-You also need to configure the block in the sonata block config
+你也需要在 sonata 块配置里对这个块进行配置
 
 .. configuration-block::
 
@@ -38,7 +37,7 @@ You also need to configure the block in the sonata block config
                 sonata.admin.block.search_result:
                 contexts: [admin]
 
-You can also configure the block template per admin while defining the admin:
+你也可以在定义 admin 时每个 admin 都配置块模板：
 
 .. configuration-block::
 
@@ -55,13 +54,12 @@ You can also configure the block template per admin while defining the admin:
               </call>
           </service>
 
-Configure the default search result action
+配置默认搜索结果操作
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In general the search result generates a link to the edit action of an item or is using the show action, if the edit
-route is disabled or you haven't the required permission. You can change this behaviour by overriding the
-``searchResultActions`` property. The defined action list will we checked successive until a route with the required
-permissions exists. If no route is found, the item will be displayed as a text.
+一般来说，搜索结果会生成一个链接到一个项目的编辑操作，或正用来做显示操作，如果编辑路由被禁用或您没有所需的权限。
+您可以通过覆盖 ``searchResultActions`` 属性来修改此行为。定义的操作列表会被一直检查，直到路由有所需的权限
+得到满足。如果没有路由满足条件，那么这个子项将显示为一个文本。
 
 .. code-block:: php
 
@@ -77,11 +75,11 @@ permissions exists. If no route is found, the item will be displayed as a text.
         // ...
     }
 
-Performance
+性能
 -----------
 
-The current implementation can be expensive if you have a lot of entities as the resulting query does a ``LIKE %query% OR LIKE %query%``...
+如果你有大量的数据实体，现在的实现性能消耗巨大，因为结果查询是通过 ``LIKE %query% OR LIKE %query%`` 实现的 ...
 
 .. note::
 
-    There is a work in progress to use an async JavaScript solution to better load data from the database.
+    我们正在做一版通过异步 JavaScript 的方案来从数据库更好的加载数据。

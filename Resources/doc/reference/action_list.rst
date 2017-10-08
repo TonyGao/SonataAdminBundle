@@ -1,20 +1,17 @@
-The List View
+列表视图
 =============
 
 .. note::
 
-    This document is a stub representing a new work in progress. If you're reading
-    this you can help contribute, **no matter what your experience level with Sonata
-    is**. Check out the `issues on GitHub`_ for more information about how to get involved.
+    本文档正在更新过程中。如果你读到了这里你可以帮助做出贡献，**无论你对 Sonata 有无经验** 。检出 
+    `issues on GitHub`_ 了解关于怎样参与其中的更多信息。
 
-This document will cover the List view which you use to browse the objects in your
-system. It will cover configuration of the list itself and the filters you can use
-to control what's visible.
+这篇文档会涵盖在你的系统中查看用来查看对象的列表视图。它将涵盖此列表自身和控制哪些可见的过滤器的配置。
 
-Basic configuration
+基础配置
 -------------------
 
-SonataAdmin Options that may affect the list view:
+会影响列表视图的 SonataAdmin 选项：
 
 .. code-block:: yaml
 
@@ -35,14 +32,14 @@ SonataAdmin Options that may affect the list view:
 .. note::
 
     **TODO**:
-    * a note about Routes and how disabling them disables the related action
-    * adding custom columns
+    * 一篇关于路由的注意事项，以及怎样关闭它们以关闭相关的操作
+    * 添加自定义列
 
-Customizing the fields displayed on the list page
+自定义列表页面上显示的字段
 -------------------------------------------------
 
-You can customize the columns displayed on the list through the ``configureListFields`` method.
-Here is an example:
+你可以通过 ``configureListFields`` 方法自定义列表上显示的列。
+这里是一个示例：
 
 .. code-block:: php
 
@@ -53,21 +50,19 @@ Here is an example:
     public function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            // addIdentifier allows to specify that this column
-            // will provide a link to the entity
-            // (edit or show route, depends on your access rights)
+            // addIdentifier 允许设定这个列提供一个到数据实体的链接
+            // (编辑或显示路由, 取决于你的准入权限)
             ->addIdentifier('name')
 
-            // you may specify the field type directly as the
-            // second argument instead of in the options
+            // 你可以直接将字段类型作为第二个参数来设定，以代替作为选项设定
             ->add('isVariation', 'boolean')
 
-            // if null, the type will be guessed
+            // 如果没设定，会猜测这个类型
             ->add('enabled', null, array(
                 'editable' => true
             ))
 
-            // editable association field
+            // 可编辑的关联字段
             ->add('status', 'choice', array(
                 'editable' => true,
                 'class' => 'Vendor\ExampleBundle\Entity\ExampleStatus',
@@ -78,21 +73,20 @@ Here is an example:
                 ),
             ))
 
-            // we can add options to the field depending on the type
+            // 我们可以根据这个类型添加选项到这个字段
             ->add('price', 'currency', array(
                 'currency' => $this->currencyDetector->getCurrency()->getLabel()
             ))
 
-            // Here we specify which property is used to render the label of each entity in the list
+            // 这里我们设定用哪个属性在列表里渲染每个数据实体的翻译标签
             ->add('productCategories', null, array(
                 'associated_property' => 'name')
             )
 
-            // you may also use dotted-notation to access
-            // specific properties of a relation to the entity
+            // 你也可以使用点分隔符来访问一个相关数据实体的特定的属性
             ->add('image.name')
 
-            // You may also specify the actions you want to be displayed in the list
+            // 你或许也想设定列表中想要显示的操作
             ->add('_action', null, array(
                 'actions' => array(
                     'show' => array(),
@@ -104,106 +98,106 @@ Here is an example:
         ;
     }
 
-Options
+选项
 ^^^^^^^
 
 .. note::
 
-    * ``(m)`` stands for mandatory
-    * ``(o)`` stands for optional
+    * ``(m)`` 代表必须的
+    * ``(o)`` 代表选项
 
-- ``type`` (m): defines the field type - mandatory for the field description itself but will try to detect the type automatically if not specified
-- ``template`` (o): the template used to render the field
-- ``label`` (o): the name used for the column's title
-- ``link_parameters`` (o): add link parameter to the related Admin class when the ``Admin::generateUrl`` is called
-- ``code`` (o): the method name to retrieve the related value (for example,
-  if you have an `array` type field, you would like to show info prettier
-  than `[0] => 'Value'`; useful when simple getter is not enough).
-  Notice: works with string-like types (string, text, html)
-- ``associated_property`` (o): property path to retrieve the "string" representation of the collection element, or a closure with the element as argument and return a string.
-- ``identifier`` (o): if set to true a link appears on the value to edit the element
+- ``type`` (m): 定义字段类型 - 为字段描述自身而必填的，但没设定时会试着自动探测类型
+- ``template`` (o): 用来渲染字段的模板
+- ``label`` (o): 用来做列标题的名称
+- ``link_parameters`` (o): 当 ``Admin::generateUrl`` 被调用时添加链接参数到相关的 Admin 类
+- ``code`` (o): 检索相关值的方法名(例如，如果你有一个 `array` 类型字段，你会想要比 `[0] => 'Value'` 
+  更漂亮的方式显示信息；通常当一个简单的 getter 不够用时)。
+  注意：只针对字符串类型(string, text, html)
+- ``associated_property`` (o): 用来检索集合元素 "string" 表示的属性路径，或者使用此元素作为参数的闭包并
+  返回一个字符串。
+- ``identifier`` (o): 如果设定为 true，会在这个值上出现一个链接来编辑这个元素
 
-Available types and associated options
+可得的类型和相关选项
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
 
-    ``(m)`` means that option is mandatory
+    ``(m)`` 意味着这个选项是必填的
 
 +-----------+----------------+-----------------------------------------------------------------------+
-| Type      | Options        | Description                                                           |
+| 类型       | 选项           | 描述                                                                   |
 +===========+================+=======================================================================+
-| actions   | actions        | List of available actions                                             |
+| actions   | actions        | 可用操作列表                                                            |
 +-----------+----------------+-----------------------------------------------------------------------+
-| batch     |                | Renders a checkbox                                                    |
+| batch     |                | 渲染一个复选框                                                          |
 +-----------+----------------+-----------------------------------------------------------------------+
-| select    |                | Renders a select box                                                  |
+| select    |                | 渲染一个单选框                                                          |
 +-----------+----------------+-----------------------------------------------------------------------+
-| array     |                | Displays an array                                                     |
+| array     |                | 显示一个数组                                                            |
 +-----------+----------------+-----------------------------------------------------------------------+
-| boolean   | ajax_hidden    | Yes/No; ajax_hidden allows to hide list field during an AJAX context. |
+| boolean   | ajax_hidden    | Yes/No; ajax_hidden 允许在 AJAX 上下文期间隐藏列表字段。                   |
 +           +----------------+-----------------------------------------------------------------------+
-|           | editable       | Yes/No; editable allows to edit directly from the list if authorized. |
+|           | editable       | Yes/No; 如果权限允许 editable 允许直接从列表编辑。                         |
 +           +----------------+-----------------------------------------------------------------------+
-|           | inverse        | Yes/No; reverses the background color (green for false, red for true) |
+|           | inverse        | Yes/No; 反转背景颜色(假是绿色，真是红色)                                   |
 +-----------+----------------+-----------------------------------------------------------------------+
-| choice    | choices        | Possible choices                                                      |
+| choice    | choices        | 可能的选项                                                              |
 +           +----------------+-----------------------------------------------------------------------+
-|           | multiple       | Is it a multiple choice option? Defaults to false.                    |
+|           | multiple       | 是多选择选项吗？默认为 false 。                                           |
 +           +----------------+-----------------------------------------------------------------------+
-|           | delimiter      | Separator of values if multiple.                                      |
+|           | delimiter      | 在多个值的情况下，作为分隔符。                                             |
 +           +----------------+-----------------------------------------------------------------------+
-|           | catalogue      | Translation catalogue.                                                |
+|           | catalogue      | 翻译域                                                                 |
 +           +----------------+-----------------------------------------------------------------------+
-|           | class          | Class path for editable association field.                            |
+|           | class          | 可编辑关联字段的类路径。                                                  |
 +-----------+----------------+-----------------------------------------------------------------------+
-| currency  | currency (m)   | A currency string (EUR or USD for instance).                          |
+| currency  | currency (m)   | 一个现金字符串 (比如 EUR 或 USD)。                                        |
 +-----------+----------------+-----------------------------------------------------------------------+
-| date      | format         | A format understandable by Twig's ``date`` function.                  |
+| date      | format         | 一种可以被 Twig 的 ``date`` 函数理解的格式。                               |
 +-----------+----------------+-----------------------------------------------------------------------+
-| datetime  | format         | A format understandable by Twig's ``date`` function.                  |
+| datetime  | format         | 一种可以被 Twig 的 ``date`` 函数理解的格式。                               |
 +-----------+----------------+-----------------------------------------------------------------------+
-| email     | as_string      | Renders the email as string, without any link.                        |
+| email     | as_string      | 将邮箱作为字符串渲染，而没有任何链接。                                      |
 +           +----------------+-----------------------------------------------------------------------+
-|           | subject        | Add subject parameter to email link.                                  |
+|           | subject        | 为邮件链接添加标题参数。                                                  |
 +           +----------------+-----------------------------------------------------------------------+
-|           | body           | Add body parameter to email link.                                     |
+|           | body           | 为邮件链接添加内容参数。                                                  |
 +-----------+----------------+-----------------------------------------------------------------------+
-| percent   |                | Renders value as a percentage.                                        |
+| percent   |                | 将一个值作为百分比渲染。                                                  |
 +-----------+----------------+-----------------------------------------------------------------------+
-| string    |                | Renders a simple string.                                              |
+| string    |                | 渲染一个简单的字符串。                                                    |
 +-----------+----------------+-----------------------------------------------------------------------+
-| text      |                | See 'string'                                                          |
+| text      |                | 同 'string'                                                           |
 +-----------+----------------+-----------------------------------------------------------------------+
-| html      |                | Renders string as html                                                |
+| html      |                | 将字符串作为 html 渲染                                                   |
 +-----------+----------------+-----------------------------------------------------------------------+
-| time      |                | Renders a datetime's time with format ``H:i:s``.                      |
+| time      |                | 以 ``H:i:s`` 格式对一个日期时间进行渲染。                                  |
 +-----------+----------------+-----------------------------------------------------------------------+
-| trans     | catalogue      | Translates the value with catalogue ``catalogue`` if defined.         |
+| trans     | catalogue      | 如果已定义，用域 ``catalogue`` 来翻译此值。                                |
 +-----------+----------------+-----------------------------------------------------------------------+
-| url       | url            | Adds a link with url ``url`` to the displayed value                   |
+| url       | url            | 为显示的值添加一个 url 为 ``url`` 的链接                                  |
 +           +----------------+-----------------------------------------------------------------------+
-|           | route          | Give a route to generate the url                                      |
+|           | route          | 用于生成 url 的路由                                                     |
 +           +                +                                                                       +
-|           |   name         | Route name                                                            |
+|           |   name         | 路由名称                                                               |
 +           +                +                                                                       +
-|           |   parameters   | Route parameters                                                      |
+|           |   parameters   | 路由参数                                                               |
 +           +----------------+-----------------------------------------------------------------------+
-|           | hide_protocol  | Hide http:// or https:// (default: false)                             |
+|           | hide_protocol  | 隐藏 http:// 或 https:// (默认为: false)                                |
 +-----------+----------------+-----------------------------------------------------------------------+
 
-If you have the SonataDoctrineORMAdminBundle installed, you have access to more field types, see `SonataDoctrineORMAdminBundle Documentation <https://sonata-project.org/bundles/doctrine-orm-admin/master/doc/reference/list_field_definition.html>`_.
+如果你安装了 SonataDoctrineORMAdminBundle, 你可以使用更多的字段类型，详见文档
+`SonataDoctrineORMAdminBundle Documentation <https://sonata-project.org/bundles/doctrine-orm-admin/master/doc/reference/list_field_definition.html>`_.
 
 .. note::
 
-    It is better to prefer non negative notions when possible for boolean
-    values so use the ``inverse`` option if you really cannot find a good enough
-    antonym for the name you have.
+    在可能的情况下，针对布尔值最好是非负选项，所以如果你没有更好的表达反义的词，
+    那可以使用 ``inverse`` 选项。
 
-Customizing the query used to generate the list
+自定义用于生成列表的查询
 -----------------------------------------------
 
-You can customize the list query thanks to the ``createQuery`` method.
+多亏了 ``createQuery`` 方法，你可以自定义列表的查询。
 
 .. code-block:: php
 
@@ -220,15 +214,14 @@ You can customize the list query thanks to the ``createQuery`` method.
     }
 
 
-Customizing the sort order
+自定义排序顺序
 --------------------------
 
-Configure the default ordering in the list view
+在列表视图中配置默认排序
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Configuring the default ordering column can simply be achieved by overriding
-the ``datagridValues`` array property. All three keys ``_page``, ``_sort_order`` and
-``_sort_by`` can be omitted.
+配置默认排序列可以简单的通过覆盖 ``datagridValues`` 数组属性来实现。所有的三个键 ``_page``, 
+``_sort_order`` 和 ``_sort_by`` 可以省略。
 
 .. code-block:: php
 
@@ -243,13 +236,13 @@ the ``datagridValues`` array property. All three keys ``_page``, ``_sort_order``
 
         protected $datagridValues = array(
 
-            // display the first page (default = 1)
+            // 显示第一页(默认是 1)
             '_page' => 1,
 
-            // reverse order (default = 'ASC')
+            // 相反的顺序 (默认是 'ASC')
             '_sort_order' => 'DESC',
 
-            // name of the ordered field (default = the model's id field, if any)
+            // 排序字段的名称(默认是模型的 id 字段，如果有的话)
             '_sort_by' => 'updatedAt',
         );
 
@@ -258,16 +251,16 @@ the ``datagridValues`` array property. All three keys ``_page``, ``_sort_order``
 
 .. note::
 
-    The ``_sort_by`` key can be of the form ``mySubModel.mySubSubModel.myField``.
+    ``_sort_by`` 键可以是 ``mySubModel.mySubSubModel.myField`` 的形式。
 
 .. note::
 
-    **TODO**: how to sort by multiple fields (this might be a separate recipe?)
+    **TODO** 怎么通过多字段进行排序(这可能是一个单独的秘诀？)
 
-Filters
+过滤器
 -------
 
-You can add filters to let user control which data will be displayed.
+你可以添加过滤器来让用户控制显示哪些数据。
 
 .. code-block:: php
 
@@ -290,10 +283,9 @@ You can add filters to let user control which data will be displayed.
         // ...
     }
 
-All filters are hidden by default for space-saving. User has to check which filter he wants to use.
+为了节省空间所有过滤器默认都是隐藏的。用户需要选中你想要使用的过滤器。
 
-To make the filter always visible (even when it is inactive), set the parameter
-``show_filter`` to ``true``.
+想要让过滤器总是可见(甚至当它没开启时)，设定参数 ``show_filter`` 为 ``true`` 。
 
 .. code-block:: php
 
@@ -311,8 +303,8 @@ To make the filter always visible (even when it is inactive), set the parameter
         ;
     }
 
-By default the template generates an ``operator`` for a filter which defaults to ``sonata_type_equal``.
-Though this ``operator_type`` is automatically detected it can be changed or even be hidden:
+默认情况下模板会为一个默认为 ``sonata_type_equal`` 的过滤器生成一个 ``操作符`` 。虽然这个 ``operator_type``
+是被自动检测的，它可以被修改甚至被隐藏：
 
 .. code-block:: php
 
@@ -330,8 +322,8 @@ Though this ``operator_type`` is automatically detected it can be changed or eve
         ;
     }
 
-If you don't need the advanced filters, or all your ``operator_type`` are hidden, you can disable them by setting
-``advanced_filter`` to ``false``. You need to disable all advanced filters to make the button disappear.
+如果你不需要高级过滤器，或者说所有的 ``operator_type`` 都是隐藏的，你可以通过设定 ``advanced_filter`` 为 false 来关闭它们。
+你需要关闭所有高级过滤器来让按钮不可见。
 
 .. code-block:: php
 
@@ -347,11 +339,11 @@ If you don't need the advanced filters, or all your ``operator_type`` are hidden
         ;
     }
 
-Default filters
+默认过滤器
 ^^^^^^^^^^^^^^^
 
-Default filters can be added to the datagrid values by using the ``configureDefaultFilterValues`` method.
-A filter has a ``value`` and an optional ``type``. If no ``type`` is given the default type ``is equal`` is used.
+可以使用 ``configureDefaultFilterValues`` 方法来将默认的过滤器添加到数据列表的值里。一个过滤器有一个 ``value`` 和一个选项的
+``type`` 。如果没给定 ``type``, 那么默认被使用的的类型是 ``is equal`` 。
 
 .. code-block:: php
 
@@ -363,10 +355,10 @@ A filter has a ``value`` and an optional ``type``. If no ``type`` is given the d
         );
     }
 
-Available types are represented through classes which can be found here:
+可用的类型是通过类表现的，可以在这里找到：
 https://github.com/sonata-project/SonataCoreBundle/tree/master/Form/Type
 
-Types like ``equal`` and ``boolean`` use constants to assign a choice of ``type`` to an ``integer`` for its ``value``:
+类似 ``equal`` 和 ``boolean`` 的类型使用常量来赋值给这些 ``类型`` 的选项一个 ``正整型`` 来当做它的 ``值``:
 
 .. code-block:: php
 
@@ -381,10 +373,10 @@ Types like ``equal`` and ``boolean`` use constants to assign a choice of ``type`
         const TYPE_IS_NOT_EQUAL = 2;
     }
 
-The integers are then passed in the URL of the list action e.g.:
+然后这个正整数在列表操作 URL 被传入，如： 
 **/admin/user/user/list?filter[enabled][type]=1&filter[enabled][value]=1**
 
-This is an example using these constants for an ``boolean`` type:
+这是一个为一个 ``boolean`` 类型使用这些常量的例子：
 
 .. code-block:: php
 
@@ -402,7 +394,8 @@ This is an example using these constants for an ``boolean`` type:
         );
     }
 
-Please note that setting a ``false`` value on a the ``boolean`` type will not work since the type expects an integer of  ``2`` as ``value`` as defined in the class constants:
+请注意在一个 ``boolean`` 类型上设置一个 ``false`` 作为值是不能工作的，因为这个类型预期是用正整型 ``2`` 做为值，
+如类常量中定义的那样：
 
 .. code-block:: php
 
@@ -417,7 +410,7 @@ Please note that setting a ``false`` value on a the ``boolean`` type will not wo
         const TYPE_NO = 2;
     }
 
-Default filters can also be added to the datagrid values by overriding the ``getFilterParameters`` method.
+默认的过滤器也可以通过覆盖 ``getFilterParameters`` 方法来添加到数据列表中。
 
 .. code-block:: php
 
@@ -439,7 +432,7 @@ Default filters can also be added to the datagrid values by overriding the ``get
         }
     }
 
-This approach is useful when you need to create dynamic filters.
+这个实现对于当你需要动态创建过滤器时很有用。
 
 .. code-block:: php
 
@@ -447,7 +440,7 @@ This approach is useful when you need to create dynamic filters.
     {
         public function getFilterParameters()
         {
-            // Assuming security context injected
+            // 假设安全上下文已经注入了
             if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
                 $user = $this->securityContext->getToken()->getUser();
 
@@ -463,12 +456,13 @@ This approach is useful when you need to create dynamic filters.
         }
     }
 
-Please note that this is not a secure approach to hide posts from others. It's just an example for setting filters on demand.
+请注意这不是一个安全的实现，在发帖间隐藏彼此。这只是一个需要设置过滤器的例子。
 
-Callback filter
+回调过滤器
 ^^^^^^^^^^^^^^^
 
-If you have the **SonataDoctrineORMAdminBundle** installed you can use the ``doctrine_orm_callback`` filter type e.g. for creating a full text filter:
+如果你已经安装了 **SonataDoctrineORMAdminBundle** ，你可以使用 ``doctrine_orm_callback`` 过滤器类型，
+比如，用于创建一个全文本过滤器：
 
 .. code-block:: php
 
@@ -495,7 +489,7 @@ If you have the **SonataDoctrineORMAdminBundle** installed you can use the ``doc
                 return;
             }
 
-            // Use `andWhere` instead of `where` to prevent overriding existing `where` conditions
+            // 使用 `andWhere` 而不是 `where` 来防止覆盖现有的 `where` 条件
             $queryBuilder->andWhere($queryBuilder->expr()->orX(
                 $queryBuilder->expr()->like($alias.'.username', $queryBuilder->expr()->literal('%' . $value['value'] . '%')),
                 $queryBuilder->expr()->like($alias.'.firstName', $queryBuilder->expr()->literal('%' . $value['value'] . '%')),
@@ -506,7 +500,7 @@ If you have the **SonataDoctrineORMAdminBundle** installed you can use the ``doc
         }
     }
 
-You can also get the filter type which can be helpful to change the operator type of your condition(s):
+你也可以获得用于帮助修改你的条件的操作符类型过滤器类型:
 
 .. code-block:: php
 
@@ -534,21 +528,20 @@ You can also get the filter type which can be helpful to change the operator typ
 .. note::
 
     **TODO**:
-    * basic filter configuration and options
-    * targeting submodel fields using dot-separated notation
-    * advanced filter options (global_search)
+    * 基本过滤器配置和选项
+    * 使用点分隔符号来定位子模型字段
+    * 高级过滤器选项(global_search)
 
-Visual configuration
+可视化配置
 --------------------
 
-You have the possibility to configure your List View to customize the render without overriding to whole template.
-You can :
+你可以配置列表视图以自定义渲染，而不用父爱盖整个模板。你可以: 
 
-- `header_style`: Customize the style of header (width, color, background, align...)
-- `header_class`: Customize the class of the header
-- `collapse`: Allow to collapse long text fields with a "read more" link
-- `row_align`: Customize the alignment of the rendered inner cells
-- `label_icon`: Add an icon before label
+- `header_style`: 自定义头部样式(宽度，颜色，背景，对齐...)
+- `header_class`: 自定义头部的 class 
+- `collapse`: 允许使用 "阅读更多" 链接来折叠长文本字段
+- `row_align`: 自定义渲染内部单元格的对齐方式
+- `label_icon`: 在标签之前添加一个图标
 
 .. code-block:: php
 
@@ -580,7 +573,7 @@ You can :
         ;
     }
 
-If you want to customise the `collapse` option, you can also give an array to override the default parameters.
+如果你要自定义 `折叠` 选项，你也可以给定一个数组来覆盖默认的参数。
 
 .. code-block:: php
 
@@ -589,13 +582,13 @@ If you want to customise the `collapse` option, you can also give an array to ov
                 'header_style' => 'width: 35%',
                 'collapse' => array(
                     'height' => 40, // height in px
-                    'read_more' => 'I want to see the full description', // content of the "read more" link
-                    'read_less' => 'This text is too long, reduce the size' // content of the "read less" link
+                    'read_more' => '我想要看全部描述', // "阅读更多"链接的内容
+                    'read_less' => '这个文本太长了，缩短长度' // "阅读更少"链接的内容
                 )
             )
             // ...
 
-If you want to show only the `label_icon`:
+如果你只想显示 `label_icon`:
 
 .. code-block:: php
 
@@ -608,19 +601,18 @@ If you want to show only the `label_icon`:
 
 .. _`issues on GitHub`: https://github.com/sonata-project/SonataAdminBundle/issues/1519
 
-Mosaic view button
+马赛克视图按钮
 ------------------
 
-You have the possibility to show/hide mosaic view button.
+你可以显示/隐藏马赛克视图按钮
 
 .. code-block:: yaml
 
     sonata_admin:
-        # for hide mosaic view button on all screen using `false`
+        # 要在所有屏幕隐藏马赛克视图按钮，使用 `false`
         show_mosaic_button:   true
 
-You can show/hide mosaic view button using admin service configuration. You need to add option ``show_mosaic_button``
-in your admin services:
+你可以使用 admin 服务配置来显示/隐藏马赛克视图按钮。你需要在你的 admin 服务里添加 ``show_mosaic_button`` 选项:
 
 .. code-block:: yaml
 
@@ -636,10 +628,9 @@ in your admin services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: News, show_mosaic_button: false }
 
-Checkbox range selection
+复选框范围选择
 ------------------------
 
 .. tip::
 
-    You can check / uncheck a range of checkboxes by clicking a first one,
-    then a second one with shift + click.
+    你可以通过单击第一个来选中/取消一个复选框范围，然后第二个通过 shift + 单击。
