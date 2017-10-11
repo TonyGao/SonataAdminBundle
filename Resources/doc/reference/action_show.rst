@@ -1,39 +1,38 @@
-The Show action
+显示操作
 ===============
 
 .. note::
 
-    This document is a stub representing a new work in progress. If you're reading
-    this you can help contribute, **no matter what your experience level with Sonata
-    is**. Check out the `issues on GitHub`_ for more information about how to get involved.
+    本文档正在更新过程中。如果你读到了这里你可以帮助做出贡献，**无论你对 Sonata 有无经验** 。检出 
+    `issues on GitHub`_ 了解关于怎样参与其中的更多信息。
 
-This document will cover the Show action and related configuration options.
+这篇文档将涵盖显示操作和相关的配置选项。
 
-Basic configuration
+基础配置
 -------------------
 
 .. note::
 
     **TODO**:
-    * a note about Routes and how disabling them disables the related action
-    * a note about lifecycle events triggered by delete?
-    * options available when adding general fields, inc custom templates
-    * targeting submodel fields using dot-separated notation
-    * (Note, if this is very similar to the form documentation it can be combined)
+    * 关于路由的一个注意事项，以及怎样关闭它们来关闭禁用相关的操作
+    * 关于删除操作触发的生命周期事件的一个注意事项
+    * 当添加一般字段时的可用选项，包括自定义模板
+    * 使用点号分隔符定位子模型字段
+    * (注意， 如果这跟表单文档类似，可以合并它)
 
-Group options
+分组选项
 ~~~~~~~~~~~~~
 
-When adding a group to your show page, you may specify some options for the group itself.
+当添加一个分组到你的显示页面，你可能会为分组自身设定一些选项。
 
-- ``collapsed``: unused at the moment
-- ``class``: the class for your group in the admin; by default, the value is set to ``col-md-12``.
-- ``fields``: the fields in your group (you should NOT override this unless you know what you're doing).
-- ``box_class``: the class for your group box in the admin; by default, the value is set to ``box box-primary``.
-- ``description``: to complete
-- ``translation_domain``: to complete
+- ``collapsed``: 此刻还没用
+- ``class``: 在 admin 里你分组的 css 类; 默认，这个值设定为 ``col-md-12`` 。
+- ``fields``: 你分组里的字段(你不应该覆盖这个，除非你知道你在做什么)。
+- ``box_class``: 在 admin 里你分组容器的 css 类; 默认，这个值设定为 ``box box-primary``.
+- ``description``: 待完善
+- ``translation_domain``: 待完善
 
-To specify options, do as follow:
+要设定选项，像下边这么做:
 
 .. code-block:: php
 
@@ -48,7 +47,7 @@ To specify options, do as follow:
         public function configureShowFields(ShowMapper $showMapper)
         {
             $showMapper
-                ->tab('General') // the tab call is optional
+                ->tab('General') // 标签调用是可选的
                     ->with('Addresses', array(
                         'class'       => 'col-md-8',
                         'box_class'   => 'box box-solid box-danger',
@@ -62,8 +61,7 @@ To specify options, do as follow:
         }
     }
 
-When extending an existing Admin, you may want to remove some fields, groups or tabs.
-Here is an example of how to achieve this :
+当扩展一个已存在的 Admin，你可能想要删除一些字段，分组或标签页。这里是一个实现的例子:
 
 .. code-block:: php
 
@@ -78,30 +76,30 @@ Here is an example of how to achieve this :
         {
             parent::configureShowFields($showMapper);
 
-            // remove just one field
+            // 仅删除一个字段
             $showMapper->remove('field_to_remove');
 
-            // remove a group from the "default" tab
+            // 从 "default" 标签删除一个分组
             $showMapper->removeGroup('GroupToRemove1');
 
-            // remove a group from a specific tab
+            // 从特定标签删除一个分组
             $showMapper->removeGroup('GroupToRemove2', 'Tab2');
 
-            // remove a group from a specific tab and also remove the tab if it ends up being empty
+            // 从一个特定的标签删除一个分组，如果删空了，也把标签页删除
             $showMapper->removeGroup('GroupToRemove3', 'Tab3', true);
         }
     }
 
-Customising the query used to show the object from within your Admin class
+自定义用于在 Admin 类里显示对象的查询
 --------------------------------------------------------------------------
 
-Setting up a showAction is pretty much the same as a form, which we did in the initial setup.
+创建一个 showAction 几乎和一个表单一样，就像我们在初始化安装时做的那样。
 
-It is actually a bit easier, because we are only concerned with displaying information.
+它其实更容易些，因为我们只关心显示信息。
 
-Smile, the hard part is already done.
+松口气吧，困难的部分已经完成了。
 
-The following is a working example of a ShowAction
+下边是一个 ShowAction 的例子
 
 .. code-block:: php
 
@@ -114,19 +112,18 @@ The following is a working example of a ShowAction
     {
         protected function configureShowFields(ShowMapper $showMapper)
         {
-            // here we set the fields of the ShowMapper variable,
-            // $showMapper (but this can be called anything)
+            // 这里我们设定 ShowMapper 变量的字段，
+            // $showMapper (其实它可以起任何名称)
             $showMapper
 
-                 // The default option is to just display the
-                 // value as text (for boolean this will be 1 or 0)
+                 // 默认选项仅仅是将值作为文本显示(布尔值会是 1 或 0)
                 ->add('name')
                 ->add('phone')
                 ->add('email')
 
-                 // The boolean option is actually very cool
-                 // true   shows a check mark and the 'yes' label
-                 // false  shows a check mark and the 'no' label
+                 // 布尔值选项其实非常酷
+                 // true 显示一个选定的标识以及一个 'yes' 标签
+                 // false 显示一个选定标识以及一个 'no' 标签
                 ->add('dateCafe', 'boolean')
                 ->add('datePub', 'boolean')
                 ->add('dateClub', 'boolean')
@@ -136,18 +133,18 @@ The following is a working example of a ShowAction
     }
 
 .. tip::
-    To customize the displayed label of a show field you can use the ``label`` option:
+    要自定义一个显示字段显示的标签，你可以使用 ``label`` 选项:
 
     .. code-block:: php
     
         $showMapper->add('name', null, array('label' => 'UserName'));
 
-    Setting this option to ``false`` will make the label empty.
+    设定这个选项为 ``false`` 将标签置空。
 
-Setting up a custom show template (very useful)
+设定一个自定义显示模板(非常有用)
 ===============================================
 
-The first thing you need to do is define it in app/config/config/yml:
+首先你需要在 app/config/config/yml 里定义它:
 
 .. configuration-block::
 
@@ -159,22 +156,22 @@ The first thing you need to do is define it in app/config/config/yml:
             templates:
                 show:       AppBundle:Admin:Display_Client.html.twig
 
-Once you have defined this, Sonata Admin looks for it in the following location:
+一旦定义好了，Sonata Admin 会在以下位置寻找它:
 
 ``src/AppBundle/Resources/views/Admin/Display_Client.html.twig``
 
-Now that you have told Sonata Admin where to find the template, it is time to put one in there.
+现在你已经告诉 Sonata Admin 去哪里寻找模板，现在放一个在那里吧。
 
-The recommended way to start is to copy the default template, and paste it into its new home.
+推荐你拷贝一个默认模板过去作为基础。
 
-This ensures that you can update Sonata Admin and keep all of your hard work.
+这确保你可以更新 Sonata Admin 并保证你的辛勤付出。
 
-The original template can be found in the following location:
+原版的模板可以在以下位置找到:
 
 ``vendor/sonata-project/admin-bundle/Resources/views/CRUD/base_show.html.twig``
 
-Now that you have a copy of the default template, check to make sure it works.
+现在你已经有一个默认模板了，检查一下确保它可以工作。
 
-That's it, now go code.
+就这些，现在去写代码吧。
 
 .. _`issues on GitHub`: https://github.com/sonata-project/SonataAdminBundle/issues/1519
