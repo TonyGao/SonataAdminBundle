@@ -1,15 +1,17 @@
-Deleting objects
+删除对象
 ================
+
+译者序 此篇文档暂无内容
+---------------
 
 .. note::
 
-    This document is a stub representing a new work in progress. If you're reading 
-    this you can help contribute, **no matter what your experience level with Sonata 
-    is**. Check out the `issues on GitHub`_ for more information about how to get involved.
+    本文档正在更新过程中。如果你读到了这里你可以帮助做出贡献，**无论你对 Sonata 有无经验** 。检出 
+    `issues on GitHub`_ 了解关于怎样参与其中的更多信息。
 
-This document will cover the Delete action and any related configuration options.
+此篇文档会涵盖删除操作和任何涉及的配置选项。
 
-Basic configuration
+基础配置
 -------------------
 
 .. note::

@@ -1,34 +1,35 @@
-The Export action
+导出操作
 =================
 
-This document will cover the Export action and related configuration options.
+这篇文档会涵盖导出操作以及相关配置选项。
 
-Basic configuration
+基本配置
 -------------------
 
 If you have registered the ``SonataExporterBundle`` bundle in the kernel of your application,
 you can benefit from a lot of flexibility:
 
-* You can configure default exporters globally.
-* You can add custom exporters, also globally.
-* You can configure every default writer.
+如果你已经在程序的内核注册了 ``SonataExporterBundle``，
 
-See `the exporter bundle documentation`_ for more information.
+* 你可以全局的配置默认的导出器。
+* 你也可以添加全局的自定义导出器。
+* 你可以配置所有默认的导出器。
 
-Translation
+查看 `the exporter bundle documentation`_ 了解更多信息。
+
+翻译
 ~~~~~~~~~~~
 
-All field names are translated by default.
-An internal mechanism checks if a field matching the translator strategy label exists in the current translation file
-and will use the field name as a fallback.
+默认所有字段名称都是被翻译的。
+有一个内部的机制会检查当前的翻译文件中是否有与翻译器的策略标签相匹配的字段，并将字段名称作为备用。
 
-Picking which fields to export
+
+选择要导出的字段
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, all fields are exported. More accurately, it depends on the
-persistence backend you are using, but for instance, the doctrine ORM backend
-exports all fields (associations are not exported). If you want to change this
-behavior for a specific admin, you can override the ``getExportFields()`` method:
+默认，所有字段都会被导出。更确切的说，它取决于你正在使用的持久化后端，例如，doctrine ORM 
+后端会导出所有字段(不导出关联)。如果你想要为特定的 admin 修改这个行为，你可以覆盖 
+``getExportFields()`` 方法:
 
 .. code-block:: php
 
@@ -41,10 +42,10 @@ behavior for a specific admin, you can override the ``getExportFields()`` method
 
 .. note::
 
-    Note that you can use `contact.phone` to access the `phone` property of `Contact` entity
+    注意你可以使用 `contact.phone` 来访问 `Contact` 数据实体的 `phone` 属性
 
-You can also tweak the list by creating an admin extension that implements the
-``configureExportFields()`` method.
+你也可以通过创建一个实现 ``configureExportFields()`` 方法的 admin 扩展来
+修改列表。
 
 .. code-block:: php
 
@@ -56,11 +57,10 @@ You can also tweak the list by creating an admin extension that implements the
     }
 
 
-Overriding the export formats for a specific admin
+为一个特定的 admin 覆盖导出格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Changing the export formats can be done by defining a ``getExportFormats()``
-method in your admin class.
+在 admin 类中通过定义一个 ``getExportFormats`` 方法可以修改导出格式。
 
 .. code-block:: php
 
@@ -71,10 +71,9 @@ method in your admin class.
         return array('pdf', 'html');
     }
 
-Customizing the query used to fetch the results
+自定义用于获取结果的查询
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you want to customize the query used to fetch the results for a specific admin,
-you can override the ``getDataSourceIterator()`` method:
+如果你想要为一个特定的 admin 自定义用来获取结果查询，你可以覆盖 ``getDataSourceIterator`` 方法:
 
 .. code-block:: php
 
@@ -86,7 +85,7 @@ you can override the ``getDataSourceIterator()`` method:
         public function getDataSourceIterator()
         {
             $iterator = parent::getDataSourceIterator();
-            $iterator->setDateTimeFormat('d/m/Y'); //change this to suit your needs
+            $iterator->setDateTimeFormat('d/m/Y'); //修改这里来适合你的需求
             return $iterator;
         }
     }
@@ -94,7 +93,7 @@ you can override the ``getDataSourceIterator()`` method:
 .. note::
 
     **TODO**:
-    * customising the templates used to render the output
-    * publish the exporter documentation on the project's website and update the link
+    * 自定义模板用来渲染输出
+    * 发布导出器文档到项目网站并更新链接
 
 .. _`the exporter bundle documentation`: https://github.com/sonata-project/exporter/blob/1.x/docs/reference/symfony.rst
