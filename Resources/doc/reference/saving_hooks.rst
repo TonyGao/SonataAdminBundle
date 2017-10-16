@@ -1,42 +1,33 @@
-Saving hooks
+保存钩子
 ============
 
-When a SonataAdmin is submitted for processing, there are some events called. One
-is before any persistence layer interaction and the other is afterward. Also between submitting
-and validating for edit and create actions ``preValidate`` event called. The
-events are named as follows:
+当一个 SonataAdmin 被提交处理时，会有一些事件被调用。一个是在任何持久化层交互之前，而另一个是在之后。
+在编辑和创建操作的提交和验证之间也有 ``preValidate`` 事件被调用。此事件的名称如下：
 
-- new object : ``preValidate($object)`` / ``prePersist($object)`` / ``postPersist($object)``
-- edited object : ``preValidate($object)`` / ``preUpdate($object)`` / ``postUpdate($object)``
-- deleted object : ``preRemove($object)`` / ``postRemove($object)``
+- 创建的对象 : ``preValidate($object)`` / ``prePersist($object)`` / ``postPersist($object)``
+- 编辑的对象 : ``preValidate($object)`` / ``preUpdate($object)`` / ``postUpdate($object)``
+- 删除的对象 : ``preRemove($object)`` / ``postRemove($object)``
 
-It is worth noting that the update events are called whenever the Admin is successfully
-submitted, regardless of whether there are any actual persistence layer events. This
-differs from the use of ``preUpdate`` and ``postUpdate`` events in DoctrineORM and perhaps some
-other persistence layers.
+值得注意的是无论何时 Admin 成功提交了都会调用 update 事件，无论是否存在实际的持久化层事件。这与在 DoctrineORM 
+或其他一些持久化层里使用 ``preUpdate`` 和 ``postUpdate`` 事件不同。
 
-For example: if you submit an edit form without changing any of the values on the form
-then there is nothing to change in the database and DoctrineORM would not fire the **Entity**
-class's own ``preUpdate`` and ``postUpdate`` events. However, your **Admin** class's
-``preUpdate``  and  ``postUpdate`` methods *are* called and this can be used to your
-advantage.
+例如: 如果你提交一个编辑表单而没对表单的值做任何修改，那么数据库里不会做任何修改，那么 DoctrineORM 就不会
+触发这个 **Entity** 类自己的 ``preUpdate`` 和 ``postUpdate`` 事件。然而，**Admin** 类的 ``preUpdate``
+和 ``postUpdate`` 方法会被调用，这可以方便你使用。
 
 .. note::
 
-    When embedding one Admin within another, for example using the ``sonata_type_admin``
-    field type, the child Admin's hooks are **not** fired.
+    当嵌套一个 Admin 到另一个里，例如使用 ``sonata_type_admin`` 字段类型，子管理的钩子是**不会**触发的。
 
 
-Example used with the FOS/UserBundle
+使用 FOS/UserBundle 的例子
 ------------------------------------
 
-The ``FOSUserBundle`` provides authentication features for your Symfony Project,
-and is compatible with Doctrine ORM, Doctrine ODM and Propel. See
-`FOSUserBundle on GitHub`_ for more information.
+``FOSUserBundle`` 为你的 Symfony 项目提供用户验证特性，并且兼容 Doctrine ORM, Doctrine ODM
+和 Propel. 查阅 `FOSUserBundle on GitHub`_ 了解更多信息。
 
-The user management system requires to perform specific calls when the user
-password or username are updated. This is how the Admin bundle can be used to
-solve the issue by using the ``preUpdate`` saving hook.
+用户管理系统需要在用户密码或用户名更新时执行特定的调用。这就是 Admin bundle 能够用来解决这个问题的
+的原因，通过 ``preUpdate`` 埋一个钩子。
 
 .. code-block:: php
 
@@ -89,7 +80,7 @@ solve the issue by using the ``preUpdate`` saving hook.
         }
     }
 
-The service declaration where the ``UserManager`` is injected into the Admin class.
+这个服务声明是将 ``UserManager`` 注入到 Admin 类。
 
 .. configuration-block::
 
@@ -107,15 +98,13 @@ The service declaration where the ``UserManager`` is injected into the Admin cla
         </service>
 
 
-Hooking in the Controller
+在控制器里挂载钩子
 -------------------------
 
-You may have noticed that the hooks present in the **Admin** do not allow you
-to interact with the process of deletion: you can't cancel it. To achieve this
-you should be aware that there is also a way to hook on actions in the Controller.
+你也许已经注意到了 **Admin** 里钩子不允许你与删除过程进行交互: 你不能取消它。要实现这个，
+你应该知道还有一种在控制器里的操作挂载钩子的方式。
 
-If you define a custom controller that inherits from ``CRUDController``, you can
-redefine the following methods:
+如果你通过继承 ``CRUDController`` 来自定义一个控制器，你可以重定义下边的方法：
 
 - new object : ``preCreate($object)``
 - edited object : ``preEdit($object)``
@@ -123,15 +112,12 @@ redefine the following methods:
 - show object : ``preShow($object)``
 - list objects : ``preList($object)``
 
-If these methods return a **Response**, the process is interrupted and the response
-will be returned as is by the controller (if it returns null, the process continues). You
-can generate easily a redirection to the object show page by using the method
-``redirectTo($object)``.
+如果这些方法返回一个 **Response** (响应)，那么此进程被中断，并由控制器返回此响应(如果返回 null, 该进程会继续)。
+你可以通过 ``redirectTo($object)`` 方法轻易的实现到对象显示页面的从定向。
 
 .. note::
 
-    Use case: you need to prohibit the deletion of a specific item. You may do a simple
-    check in the ``preDelete($object)`` method.
+    用例：您可能需要禁止删除特定的子项。你可以简单的看看 ``preDelete($object)`` 方法。
 
 
 .. _FOSUserBundle on GitHub: https://github.com/FriendsOfSymfony/FOSUserBundle/
